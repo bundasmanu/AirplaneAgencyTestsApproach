@@ -266,7 +266,7 @@ public class AgencyManager implements AgencyManagerRemote {
 
     //---------------------
     // logs
-    @Override
+    /*@Override
     public List<Log> getLogs(int lines) throws NoPermissionException {
         return logsManagerLocal.getLogs(lines, username);
     }
@@ -274,7 +274,7 @@ public class AgencyManager implements AgencyManagerRemote {
     @Override	
     public void removeLogs() throws NoPermissionException {	
         logsManagerLocal.removeLogs(username);	
-    }
+    }*/
 
     //---------------------
     // purchases
@@ -356,6 +356,16 @@ public class AgencyManager implements AgencyManagerRemote {
     @Override
     public TSeatDTO findAuctionedSeat(int id) throws NoPermissionException {
         return tripsManagerLocal.findAuctionedSeat(id, username);
+    }
+
+    @Override
+    public List<Log> getLogs(int lines) throws NoPermissionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void removeLogs() throws NoPermissionException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

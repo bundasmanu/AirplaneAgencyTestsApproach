@@ -32,7 +32,7 @@ public class LogsManager implements LogsManagerLocal {
     @EJB
     UsersManagerLocal userManager;
     
-    @Inject
+    /*@Inject
     @JMSConnectionFactory("jms/MyConnFactory")
     private JMSContext jmsContext;
     
@@ -40,9 +40,9 @@ public class LogsManager implements LogsManagerLocal {
     private ConnectionFactory connectionFactory;
     
     @Resource(mappedName = "jms/MyQueue")
-    Queue logsQueue;
+    Queue logsQueue;*/
     
-    @EJB
+   /* @EJB
     TLogFacadeLocal logFacade;
     
     public LogsManager() {
@@ -116,5 +116,5 @@ public class LogsManager implements LogsManagerLocal {
         userManager.verifyPermission(username, Config.OPERATOR);
         
         logFacade.removeAll();
-    }
+    }*/
 }

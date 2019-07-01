@@ -15,7 +15,7 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import logic.Log;
 
-@MessageDriven(
+/*@MessageDriven(
         activationConfig = {
             @ActivationConfigProperty(
                     propertyName = "destinationType",
@@ -25,10 +25,10 @@ import logic.Log;
                     propertyValue = "jms/MyQueue"
             )
         }
-)
-public class LogsQueueMDB implements MessageListener {
+)*/
+public class LogsQueueMDB {
     
-    @EJB
+    /*@EJB
     LogsManagerLocal logsManagerLocal;
     
     public LogsQueueMDB() {
@@ -57,6 +57,6 @@ public class LogsQueueMDB implements MessageListener {
         } catch (JMSException ex) {
             System.out.println("LogsQueueMDB: JMSException=" + ex);
         }
-    }
+    }*/
     
 }

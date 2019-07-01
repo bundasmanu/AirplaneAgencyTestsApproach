@@ -534,7 +534,7 @@ public class TripsManager implements TripsManagerLocal {
 
         tripFacade.create(trip);
         
-        logsManager.sendLogMessage(username, LogTypes.CREATE_TRIP, timerManager.getDate());
+        //logsManager.sendLogMessage(username, LogTypes.CREATE_TRIP, timerManager.getDate());
         
         return true;
     }
@@ -1020,7 +1020,7 @@ public class TripsManager implements TripsManagerLocal {
             trip.getTSeatCollection().add(seat);
         }
         
-        logsManager.sendLogMessage(username, LogTypes.FINISH_PURCHASE, timerManager.getDate());
+        //logsManager.sendLogMessage(username, LogTypes.FINISH_PURCHASE, timerManager.getDate());
         
         purchaseFacade.edit(purchase);
         userManager.editTUser(user);
@@ -1086,7 +1086,7 @@ public class TripsManager implements TripsManagerLocal {
             trip.getTSeatCollection().add(seat);
         }
         
-        logsManager.sendLogMessage(username, LogTypes.FINISH_PURCHASE, timerManager.getDate());
+        //logsManager.sendLogMessage(username, LogTypes.FINISH_PURCHASE, timerManager.getDate());
         
         purchaseFacade.edit(purchase);
         userManager.editTUser(user);
