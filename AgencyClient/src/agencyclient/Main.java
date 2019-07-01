@@ -1110,17 +1110,19 @@ public class Main {
         }	
     }	
 
-     private static void processRemoveLogs() throws NoPermissionException {	
-        sAgencyManager.removeLogs();	
+    private static void processRemoveLogs() throws NoPermissionException {	
+        //sAgencyManager.removeLogs();	
         System.out.println("Logs removed");	
     }
      
      private static void printLogs(int lines) throws NoPermissionException {	
-        List<Log> logs = sAgencyManager.getLogs(lines);
+        /*
+         List<Log> logs = ;//sAgencyManager.getLogs(lines);
         System.out.println("\nLOGS (" + logs.size() + " logs):");
         for (Log log : logs) {
             System.out.println(Utils.getFormattedLogMessage(log));
         }
+        */
      }
                 
     //----------------------------------------------------

@@ -31,89 +31,40 @@ public class BvaEctCase1{
 
     private static AgencyManagerRemote sAgencyManager;
 
-    
     static TTripFeedbackDTO tripFeedbackDTO;
     static TTripDTO tripDTO;
     FeedbackResult res;
-
+    
     @BeforeClass
     public static void beforeTests() throws NoPermissionException, NamingException {
         initRemoteReferences();
         
         //create an user
-        TUserDTO userDTO = new TUserDTO();
-        userDTO.setUsername(Config.TEST_USERNAME);
-        userDTO.setPassword(Config.TEST_PASS);
-        userDTO.setClientName("Client Name");
-        userDTO.setUsertype(logic.Config.CLIENT);
-        sAgencyManager.signUp(userDTO);
+        TUserDTO userDTO = Operations.createTestUser(sAgencyManager);
         
         //accept the user
-        sAgencyManager.signIn(Config.ADMIN_USERNAME, Config.ADMIN_PASS);
+        Operations.signinAsAdmin(sAgencyManager);
         sAgencyManager.acceptUser(userDTO);
         
-        //create the trip
-        TPlaceDTO fromPlace = new TPlaceDTO();
-        fromPlace.setAddress("Adress xtpo");
-        fromPlace.setCity("Lisbon");
-        fromPlace.setCountry("Portugal");
-        
-        TPlaceDTO toPlace = new TPlaceDTO();
-        toPlace.setAddress("Adress xtpo");
-        toPlace.setCity("Porto");
-        toPlace.setCountry("Portugal");
+        TPlaceDTO fromPlace = Operations.createFromPlace(sAgencyManager);
+        TPlaceDTO toPlace = Operations.createToPlace(sAgencyManager);
 
         sAgencyManager.addPlace(fromPlace);        
         sAgencyManager.addPlace(toPlace);
         
-        TAirlineDTO airlineDTO = new TAirlineDTO();
-        airlineDTO.setAirlineName("AirlineName1");
-        airlineDTO.setPhoneNumber("939898321");
-        sAgencyManager.addAirline(airlineDTO);
+        TAirlineDTO airlineDTO = Operations.createAirline(sAgencyManager);
+        TPlaneDTO planeDTO = Operations.createPlane(sAgencyManager);
         
-        TPlaneDTO planeDTO = new TPlaneDTO();
-        planeDTO.setPlaneLimit(100);
-        planeDTO.setPlaneName("Plane1");
-        sAgencyManager.addPlane(planeDTO);
+        tripDTO = Operations.createTrip(sAgencyManager, airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 100);
         
-        //after creating all in db we need to refresh our DTOs        
-        airlineDTO = sAgencyManager.findAllAirlines().get(0);
-        planeDTO = sAgencyManager.findAllPlanes().get(0);
-        fromPlace = sAgencyManager.findAllPlaces().get(0);
-        toPlace = sAgencyManager.findAllPlaces().get(1);
-        
-        tripDTO = new TTripDTO();
-        tripDTO.setAirlineDTO(airlineDTO);
-        tripDTO.setFromPlaceDTO(fromPlace);
-        tripDTO.setToPlaceDTO(toPlace);
-        tripDTO.setPlaneDTO(planeDTO);
-        tripDTO.setPrice(50.0);
-        tripDTO.setDatetrip(100);
-        sAgencyManager.addTrip(tripDTO);
-        
-        //refresh the trip DTO with id
-        tripDTO = sAgencyManager.findAllTrips().get(0);
-        
-        //logout from admin user
-        sAgencyManager.logout();
         
         //login from the normal user
-        sAgencyManager.signIn(Config.TEST_USERNAME, Config.TEST_PASS);
+        Operations.signinAsTestUser(sAgencyManager);
         
         //deposit money
         sAgencyManager.depositToAccount(1000);
         
-        //buy seats
-        List<TSeatDTO> seatDTOList = new ArrayList();
-        seatDTOList.add(new TSeatDTO());
-        sAgencyManager.buySeatsToTrip(tripDTO, seatDTOList);
-        
-        //finish the purchase
-        TPurchaseDTO purchaseDTO = sAgencyManager.getActualPurchase();
-        
-        sAgencyManager.finishActualPurchase(purchaseDTO);
-        
-        
+        TPurchaseDTO purchaseDTO = Operations.buyAndFinishPurchase(sAgencyManager, tripDTO);
         
         //TODO: dev:
         //  -loginAsAdmin
@@ -143,16 +94,14 @@ public class BvaEctCase1{
     @Test
     public void testSeveral() throws NoPermissionException {
         
-        sAgencyManager.logout();
-        sAgencyManager.signIn(Config.ADMIN_USERNAME, Config.ADMIN_PASS);
+        Operations.signinAsAdmin(sAgencyManager);
         
         System.out.println("Testing: TripFeedback score: "+tripFeedbackDTO.getScore()+", TripDTO done: "+tripDTO.getDone()+" -> "+ res);
        
         sAgencyManager.editTrip(tripDTO);
         
-        sAgencyManager.logout();
-        sAgencyManager.signIn(Config.TEST_USERNAME, Config.TEST_PASS);
-                
+        Operations.signinAsTestUser(sAgencyManager);
+        
         boolean booleanResult = sAgencyManager.addFeedbackToTrip(tripDTO, tripFeedbackDTO);
         
         FeedbackResult resTmp = (booleanResult == true? FeedbackResult.ValidFeedback : FeedbackResult.InvalidFeedback);
