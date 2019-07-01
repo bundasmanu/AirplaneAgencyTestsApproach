@@ -29,4 +29,6 @@ public interface TPlaneFacadeLocal {
 
     int count();
     
+    void removeAll();
+    
 }
