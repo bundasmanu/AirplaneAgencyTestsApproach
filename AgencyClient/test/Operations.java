@@ -12,7 +12,6 @@ import logic.TUserDTO;
 
 
 public class Operations {
-    
     public static void signinAsAdmin(AgencyManagerRemote sAgencyManager){
         sAgencyManager.logout();
         sAgencyManager.signIn(Config.ADMIN_USERNAME, Config.ADMIN_PASS);
