@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import static junit.framework.Assert.assertEquals;
 import logic.AgencyManagerRemote;
 import logic.GuestAgencyManagerRemote;
 import logic.NoPermissionException;
@@ -20,11 +26,11 @@ import logic.TTripDTO;
 import logic.TTripFeedbackDTO;
 import logic.TUserDTO;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
 
 @RunWith(Parameterized.class)
 public class BvaEctCase1{
@@ -37,7 +43,7 @@ public class BvaEctCase1{
     
     @BeforeClass
     public static void beforeTests() throws NoPermissionException, NamingException {
-        initRemoteReferences();
+        sAgencyManager= Operations.initRemoteReferences(sAgencyManager);
         
         //create an user
         TUserDTO userDTO = Operations.createTestUser(sAgencyManager);
@@ -48,9 +54,6 @@ public class BvaEctCase1{
         
         TPlaceDTO fromPlace = Operations.createFromPlace(sAgencyManager);
         TPlaceDTO toPlace = Operations.createToPlace(sAgencyManager);
-
-        sAgencyManager.addPlace(fromPlace);        
-        sAgencyManager.addPlace(toPlace);
         
         TAirlineDTO airlineDTO = Operations.createAirline(sAgencyManager);
         TPlaneDTO planeDTO = Operations.createPlane(sAgencyManager);
@@ -118,41 +121,6 @@ public class BvaEctCase1{
         //todo: remove the indexes
         
     }
-    
-    private static void initRemoteReferences() {
-        Properties prop = new Properties();
-
-        prop.setProperty("java.naming.factory.initial",
-                "com.sun.enterprise.naming.SerialInitContextFactory");
-
-        prop.setProperty("java.naming.factory.url.pkgs",
-                "com.sun.enterprise.naming");
-
-        prop.setProperty("java.naming.factory.state",
-                "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-
-        prop.setProperty("org.omg.CORBA.ORBInitialHost", "192.168.56.175");
-        prop.setProperty("org.omg.CORBA.ORBInitialPort", "3700");
-
-        InitialContext ctx = null;
-        try {
-           ctx = new InitialContext(prop);
-        
-        } catch (NamingException e) {
-           System.out.println(e.getMessage());
-           System.exit(1);
-        }
-
-        String agencyManagerClassName = "java:global/Agency/Agency-ejb/AgencyManager!logic.AgencyManagerRemote";
-        String guestAgencyManagerClassName = "java:global/Agency/Agency-ejb/GuestAgencyManager!logic.GuestAgencyManagerRemote";
-
-        try {
-           sAgencyManager = (AgencyManagerRemote) ctx.lookup(agencyManagerClassName);
-        
-        } catch (NamingException e) {
-           System.out.println(e.getMessage());
-           e.printStackTrace();
-        }
-    }
+   
     
 }
