@@ -37,6 +37,8 @@ public class BvaEctCase2 {
     
     int limitNumberTrip;
     
+    int horaAtual;
+    
     FeedbackResult res;
     
     @BeforeClass
@@ -72,7 +74,8 @@ public class BvaEctCase2 {
     public BvaEctCase2(String fromPlace, String toPlace, int hourLeft, int limitNumberPersons, FeedbackResult feedback) {
         this.fromPlace.setCity(fromPlace);
         this.toPlace.setCity(toPlace);
-        this.trip.setDatetrip(hourLeft);
+        this.horaAtual=hourLeft;
+        this.trip.setDatetrip(200);
         this.limitNumberTrip=limitNumberPersons;
         this.res=feedback;
     }
@@ -102,8 +105,8 @@ public class BvaEctCase2 {
             {"Madrid", "Porto", 50, 0 , FeedbackResult.ValidFeedback},
             {"Madrid", "Madrid", 50, 0 , FeedbackResult.ValidFeedback},
             {"Porto", "Porto", 200 , 5 , FeedbackResult.InvalidFeedback}, /*FALHA 19--> O SISTEMA DEIXA COMPRAR BILHETE, MSM DPS DE ADQUIRIR DA VIAGEM TER TERMINADO E NAO VALIDADO MESMO DESTINO E PARTIDA*/
-            {"Porto", "Madrid", 200, 6 , FeedbackResult.ValidFeedback}, 
-            {"Madrid", "Porto", 200, 7 , FeedbackResult.ValidFeedback},
+            {"Porto", "Madrid", 200, 6 , FeedbackResult.InvalidFeedback}, /*FALHA 20--> O SISTEMA DEIXA COMPRAR BILHETE, MSM DPS DE ADQUIRIR DA VIAGEM TER TERMINADO*/
+            {"Madrid", "Porto", 200, 7 , FeedbackResult.InvalidFeedback}, /*FALHA 21--> O SISTEMA DEIXA COMPRAR BILHETE, MSM DPS DE ADQUIRIR DA VIAGEM TER TERMINADO*/
             {"Madrid", "Madrid", 200, 9 , FeedbackResult.InvalidFeedback}, /*FALHA 22--> DEIXA COMPRAR BILHETES COM O MSM DESTINO E PARTIDA*/
             {"Porto", "Porto", 50 , 5 , FeedbackResult.InvalidFeedback}, /*FALHA 23--> DEIXA COMPRAR BILHETES COM O MSM DESTINO E PARTIDA*/
             {"Porto", "Madrid", 50, 6 , FeedbackResult.ValidFeedback},
@@ -154,7 +157,50 @@ public class BvaEctCase2 {
             {"Porto", "Porto", 50 , 12 , FeedbackResult.InvalidFeedback}, /*ESTA A FAZER BEM O TESTE, MAS SO FAZ BEM POR CAUSA DA TENTATIVA DE COMPRAR MAIS BILHETES QUE O ESPERADO (O SISTEMA FAZ ISSO BEM), NAO VERIFICA SE SAO AS MSM CIDADE PARTIDA E DESTINO*/
             {"Porto", "Madrid", 50 , 11 , FeedbackResult.InvalidFeedback}, 
             {"Madrid", "Porto", 50 , 11 , FeedbackResult.InvalidFeedback}, 
-            {"Madrid", "Madrid", 50 , 15 , FeedbackResult.InvalidFeedback} /*ESTA A FAZER BEM O TESTE, MAS SO FAZ BEM POR CAUSA DA TENTATIVA DE COMPRAR MAIS BILHETES QUE O ESPERADO (O SISTEMA FAZ ISSO BEM), NAO VERIFICA SE SAO AS MSM CIDADE PARTIDA E DESTINO*/
+            {"Madrid", "Madrid", 50 , 15 , FeedbackResult.InvalidFeedback}, /*ESTA A FAZER BEM O TESTE, MAS SO FAZ BEM POR CAUSA DA TENTATIVA DE COMPRAR MAIS BILHETES QUE O ESPERADO (O SISTEMA FAZ ISSO BEM), NAO VERIFICA SE SAO AS MSM CIDADE PARTIDA E DESTINO*/
+            /*WEAK NORMAL HIBRIDO*/
+            /*7 É A MEDIA ENTRE O Nº DE LUGARES VAGOS (5) E A LOTACAO DO AVIAO (10), E PARTE AOS 200*/
+            {"Porto", "Madrid", 0, 7 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Porto", "Madrid", 1, 7 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Porto", "Madrid", 100, 7 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Porto", "Madrid", 198, 7 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Porto", "Madrid", 199, 7 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Porto", "Madrid", 100, 5 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Porto", "Madrid", 100, 6 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Porto", "Madrid", 100, 8 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Porto", "Madrid", 100, 9 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Madrid", "Porto", 200 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR--> FALHA PORQUE O Nº DE LUGARES JA ESTA COMPLETAMENTE CHEIO, CASO ISSO NAO ACONTECE O TESTE NAO FAZIA O QUE SE PRETENDIA, VISTO QUE O SISTEMA NÃO ESTA A VALIDAR A HORA*/
+            {"Madrid", "Porto", 201 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR--> FALHA PORQUE O Nº DE LUGARES JA ESTA COMPLETAMENTE CHEIO, CASO ISSO NAO ACONTECE O TESTE NAO FAZIA O QUE SE PRETENDIA, VISTO QUE O SISTEMA NÃO ESTA A VALIDAR A HORA*/
+            {"Madrid", "Porto", (Integer.MAX_VALUE+200)/2 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR--> FALHA PORQUE O Nº DE LUGARES JA ESTA COMPLETAMENTE CHEIO, CASO ISSO NAO ACONTECE O TESTE NAO FAZIA O QUE SE PRETENDIA, VISTO QUE O SISTEMA NÃO ESTA A VALIDAR A HORA*/
+            {"Madrid", "Porto", Integer.MAX_VALUE-2 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR--> FALHA PORQUE O Nº DE LUGARES JA ESTA COMPLETAMENTE CHEIO, CASO ISSO NAO ACONTECE O TESTE NAO FAZIA O QUE SE PRETENDIA, VISTO QUE O SISTEMA NÃO ESTA A VALIDAR A HORA*/
+            {"Madrid", "Porto", Integer.MAX_VALUE-1, 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR--> FALHA PORQUE O Nº DE LUGARES JA ESTA COMPLETAMENTE CHEIO, CASO ISSO NAO ACONTECE O TESTE NAO FAZIA O QUE SE PRETENDIA, VISTO QUE O SISTEMA NÃO ESTA A VALIDAR A HORA*/
+            {"Madrid", "Porto", 0 , 0 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Madrid", "Porto", 1 , 0 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Madrid", "Porto", 100 , 0 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Madrid", "Porto", 198, 0 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            {"Madrid", "Porto", 199 , 0 , FeedbackResult.ValidFeedback}, /*NAO DEVE FALHAR*/
+            /*WEAK ROBUST HIBRIDO*/
+            {"Moscovo", "Porto", 200 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR, MAS SO FALHA POR CAUSA DE JÁ TER TODOS OS LUGARES CHEIOS, A DATA ESTA MAL VALIDADA*/
+            {"Moscovo", "Porto", 201 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR, MAS SO FALHA POR CAUSA DE JÁ TER TODOS OS LUGARES CHEIOS, A DATA ESTA MAL VALIDADA*/
+            {"Moscovo", "Porto", (Integer.MAX_VALUE+200)/2 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR, MAS SO FALHA POR CAUSA DE JÁ TER TODOS OS LUGARES CHEIOS, A DATA ESTA MAL VALIDADA*/
+            {"Moscovo", "Porto", Integer.MAX_VALUE-2 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR, MAS SO FALHA POR CAUSA DE JÁ TER TODOS OS LUGARES CHEIOS, A DATA ESTA MAL VALIDADA*/
+            {"Moscovo", "Porto", Integer.MAX_VALUE-1 , 10 , FeedbackResult.InvalidFeedback}, /*DEVE FALHAR, MAS SO FALHA POR CAUSA DE JÁ TER TODOS OS LUGARES CHEIOS, A DATA ESTA MAL VALIDADA*/
+            {"Porto", "Moscovo", 0 , 0 , FeedbackResult.InvalidFeedback}, /*FALHA 86--> DEVIA SER INVALIDO, MAS É IMPOSSÍVEL TESTAR CIDADES QUE NAO EXISTAM LOGO, O TESTE VAI FALHAR, VISTO QUE DEIXA INSERIR BILHETES*/
+            {"Porto", "Moscovo", 1 , 0 , FeedbackResult.InvalidFeedback}, /*FALHA 87--> DEVIA SER INVALIDO, MAS É IMPOSSÍVEL TESTAR CIDADES QUE NAO EXISTAM LOGO, O TESTE VAI FALHAR, VISTO QUE DEIXA INSERIR BILHETES*/
+            {"Porto", "Moscovo", 100 , 0 , FeedbackResult.InvalidFeedback}, /*FALHA 88--> DEVIA SER INVALIDO, MAS É IMPOSSÍVEL TESTAR CIDADES QUE NAO EXISTAM LOGO, O TESTE VAI FALHAR, VISTO QUE DEIXA INSERIR BILHETES*/
+            {"Porto", "Moscovo", 198 , 0 , FeedbackResult.InvalidFeedback}, /*FALHA 89--> DEVIA SER INVALIDO, MAS É IMPOSSÍVEL TESTAR CIDADES QUE NAO EXISTAM LOGO, O TESTE VAI FALHAR, VISTO QUE DEIXA INSERIR BILHETES*/
+            {"Porto", "Moscovo", 199 , 0 , FeedbackResult.InvalidFeedback}, /*FALHA 90--> DEVIA SER INVALIDO, MAS É IMPOSSÍVEL TESTAR CIDADES QUE NAO EXISTAM LOGO, O TESTE VAI FALHAR, VISTO QUE DEIXA INSERIR BILHETES*/
+//            {"Madrid", "Porto", 50 , Integer.MIN_VALUE , FeedbackResult.InvalidFeedback}, /*IMPOSSIVEL TESTAR LUGARES NEGATIVOS*/
+//            {"Madrid", "Porto", 50 , Integer.MIN_VALUE+1 , FeedbackResult.InvalidFeedback}, /*IMPOSSIVEL TESTAR LUGARES NEGATIVOS*/
+//            {"Madrid", "Porto", 50 , Integer.MIN_VALUE/2 , FeedbackResult.InvalidFeedback}, /*IMPOSSIVEL TESTAR LUGARES NEGATIVOS*/
+//            {"Madrid", "Porto", 50 , -2 , FeedbackResult.InvalidFeedback}, /*IMPOSSIVEL TESTAR LUGARES NEGATIVOS*/
+//            {"Madrid", "Porto", 50 , -1 , FeedbackResult.InvalidFeedback}, /*IMPOSSIVEL TESTAR LUGARES NEGATIVOS*/
+            {"Porto", "Madrid", 200 , 6 , FeedbackResult.InvalidFeedback}, /*FALHA 91--> TESTE VAI FALHAR, PORQUE A VALIDACAO DO TEMPO NAO ESTA FEITA*/
+            {"Porto", "Madrid", 200 , 7 , FeedbackResult.InvalidFeedback}, /*FALHA 92--> TESTE VAI FALHAR, PORQUE A VALIDACAO DO TEMPO NAO ESTA FEITA*/
+            /*3 ULTIMOS IMPOSSIVEIS DE TESTAR PORQUE IA SER CRIADO UM ARRAY COM MILHARES DE ELEMENTOS, IA ESTOIRAR TUDO*/
+//            {"Porto", "Madrid", 200 , (Integer.MAX_VALUE+5)/2 , FeedbackResult.InvalidFeedback}, /*TESTE NAO FALHA, APENAS POR CAUSA DO Nº DE LUGARES SER SUPERIOR AOS PERMITIDOS, CONTUDO A VALIDACAO DO TEMPO NAO ESTA FEITA*/
+////            {"Porto", "Madrid", 200 , Integer.MAX_VALUE-1 , FeedbackResult.InvalidFeedback}, /*TESTE NAO FALHA, APENAS POR CAUSA DO Nº DE LUGARES SER SUPERIOR AOS PERMITIDOS, CONTUDO A VALIDACAO DO TEMPO NAO ESTA FEITA*/
+////            {"Porto", "Madrid", 200 , Integer.MAX_VALUE-2 , FeedbackResult.InvalidFeedback}, /*TESTE NAO FALHA, APENAS POR CAUSA DO Nº DE LUGARES SER SUPERIOR AOS PERMITIDOS, CONTUDO A VALIDACAO DO TEMPO NAO ESTA FEITA*/
         });
     }
     
@@ -165,7 +211,7 @@ public class BvaEctCase2 {
             
            /*LOGIN COMO OPERADOR--> COLOCAR NA BD OS PARAMETROS ATUALIZADOS, PASSADOS NO CONSTRUTOR*/
            Operations.signinAsAdmin(sAgencyManager);
-           
+           sAgencyManager.setDate(this.horaAtual);
            sAgencyManager.editPlace(fromPlace);
            sAgencyManager.editPlace(toPlace);
            sAgencyManager.editPlane(planeTrip);
@@ -182,17 +228,15 @@ public class BvaEctCase2 {
            
            sAgencyManager.editTrip(trip);
            trip=sAgencyManager.findTrip(trip.getId());
-           
-                      TPurchaseDTO newPurchase=null;
-           if(tpurchase!=null || limitNumberTrip==0){
-           
-           /*TENTATIVA DE FAZER MAIS UMA COMPRA*/
-           Operations.signinAsTestUser(sAgencyManager);
-           
 
-           
-           newPurchase=Operations.buyAndFinishPurchaseCase2(sAgencyManager, trip, 1);
-           }
+            TPurchaseDTO newPurchase = null;
+            if (tpurchase != null || limitNumberTrip == 0) {
+
+                /*TENTATIVA DE FAZER MAIS UMA COMPRA*/
+                Operations.signinAsTestUser(sAgencyManager);
+
+                newPurchase = Operations.buyAndFinishPurchaseCase2(sAgencyManager, trip, 1);
+            }
            
             if(newPurchase!=null && this.res==FeedbackResult.ValidFeedback){
                 this.limpaDados(tpurchase, newPurchase);
