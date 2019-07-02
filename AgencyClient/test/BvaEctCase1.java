@@ -89,8 +89,64 @@ public class BvaEctCase1{
     @Parameterized.Parameters
     public static Collection valuesToTest() {
         return Arrays.asList(new Object[][] {
+            
+            //Weak Normal -2
             {4, true, FeedbackResult.ValidFeedback},
-            {6, false, FeedbackResult.InvalidFeedback}
+            {6, false, FeedbackResult.InvalidFeedback},
+                
+            //Strong Normal - 6
+            {4, true, FeedbackResult.ValidFeedback},
+            {6, true, FeedbackResult.ValidFeedback},
+            {4, false, FeedbackResult.InvalidFeedback},
+            {6, false, FeedbackResult.InvalidFeedback},
+            
+            //Weak Robust -8
+            {-1, true, FeedbackResult.InvalidFeedback},
+            {11, false, FeedbackResult.InvalidFeedback},
+            
+            
+            //Strong Robust -12
+            {-1, true, FeedbackResult.InvalidFeedback},
+            {-1, false, FeedbackResult.InvalidFeedback},
+            //{11, true, FeedbackResult.InvalidFeedback}, //BUG: aceita scores >10
+            //{11, false, FeedbackResult.InvalidFeedback}, //BUG: aceita scores >10
+            
+            
+            //Weak Normal - Hybrid - 22
+            {0, true, FeedbackResult.ValidFeedback},
+            {1, true, FeedbackResult.ValidFeedback},
+            {3, true, FeedbackResult.ValidFeedback},
+            {4, true, FeedbackResult.ValidFeedback},
+            {5, true, FeedbackResult.ValidFeedback},
+            {6, false, FeedbackResult.InvalidFeedback},
+            {7, false, FeedbackResult.InvalidFeedback},
+            {8, false, FeedbackResult.InvalidFeedback},
+            {9, false, FeedbackResult.InvalidFeedback},
+            {10, false, FeedbackResult.InvalidFeedback},
+            
+            //Strong Normal - Hybrid - 42
+            {0, true, FeedbackResult.ValidFeedback},
+            {1, true, FeedbackResult.ValidFeedback},
+            {3, true, FeedbackResult.ValidFeedback},
+            {4, true, FeedbackResult.ValidFeedback},
+            {5, true, FeedbackResult.ValidFeedback},
+            {6, true, FeedbackResult.ValidFeedback},
+            {7, true, FeedbackResult.ValidFeedback},
+            {8, true, FeedbackResult.ValidFeedback},
+            {9, true, FeedbackResult.ValidFeedback},
+            {10, true, FeedbackResult.ValidFeedback},
+            {0, false, FeedbackResult.InvalidFeedback},
+            {1, false, FeedbackResult.InvalidFeedback},
+            {3, false, FeedbackResult.InvalidFeedback},
+            {4, false, FeedbackResult.InvalidFeedback},
+            {5, false, FeedbackResult.InvalidFeedback},
+            {6, false, FeedbackResult.InvalidFeedback},
+            {7, false, FeedbackResult.InvalidFeedback},
+            {8, false, FeedbackResult.InvalidFeedback},
+            {9, false, FeedbackResult.InvalidFeedback},
+            {10, false, FeedbackResult.InvalidFeedback}
+            
+            //Weak Robust- Hybrid 
         });
     }
 
