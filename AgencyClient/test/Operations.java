@@ -103,6 +103,7 @@ public class Operations {
     
     public static void deleteTrip(AgencyManagerRemote sAgencyManager, TTripDTO trip) throws NoPermissionException{
         
+        sAgencyManager.cancelTrip(trip);
         sAgencyManager.removeTrip(trip);
         
     }
