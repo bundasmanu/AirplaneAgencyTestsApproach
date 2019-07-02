@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +36,12 @@ public class BvaEctCase1{
     static TTripDTO tripDTO;
     FeedbackResult res;
     
+    static TPlaceDTO fromPlace;
+    static TPlaceDTO toPlace;
+    static TAirlineDTO airlineDTO; 
+    static TPlaneDTO planeDTO;
+    static TPurchaseDTO purchaseDTO;
+    
     @BeforeClass
     public static void beforeTests() throws NoPermissionException, NamingException {
         sAgencyManager= Operations.initRemoteReferences(sAgencyManager);
@@ -52,11 +53,11 @@ public class BvaEctCase1{
         Operations.signinAsAdmin(sAgencyManager);
         sAgencyManager.acceptUser(userDTO);
         
-        TPlaceDTO fromPlace = Operations.createFromPlace(sAgencyManager);
-        TPlaceDTO toPlace = Operations.createToPlace(sAgencyManager);
+        fromPlace = Operations.createFromPlace(sAgencyManager);
+        toPlace = Operations.createToPlace(sAgencyManager);
         
-        TAirlineDTO airlineDTO = Operations.createAirline(sAgencyManager);
-        TPlaneDTO planeDTO = Operations.createPlane(sAgencyManager);
+        airlineDTO = Operations.createAirline(sAgencyManager);
+        planeDTO = Operations.createPlane(sAgencyManager);
         
         tripDTO = Operations.createTrip(sAgencyManager, airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 100);
         
@@ -67,7 +68,7 @@ public class BvaEctCase1{
         //deposit money
         sAgencyManager.depositToAccount(1000);
         
-        TPurchaseDTO purchaseDTO = Operations.buyAndFinishPurchase(sAgencyManager, tripDTO);
+        purchaseDTO = Operations.buyAndFinishPurchase(sAgencyManager, tripDTO);
         
         //TODO: dev:
         //  -loginAsAdmin
@@ -93,7 +94,6 @@ public class BvaEctCase1{
         });
     }
 
-
     @Test
     public void testSeveral() throws NoPermissionException {
         
@@ -114,13 +114,23 @@ public class BvaEctCase1{
     }
 
     @AfterClass
-    public static void afterTests() {
-        //planeFacade.removeAll();
-        //placeFacade.removeAll();
-
-        //todo: remove the indexes
-        
+    public static void tearDownClass() throws NoPermissionException {
+        clearAllData();
     }
    
+    static void clearAllData() throws NoPermissionException{
+        
+        sAgencyManager.removeSeatsOfActualPurchase(purchaseDTO, tripDTO);
+        sAgencyManager.removeActualPurchase(purchaseDTO);
+        
+        Operations.signinAsAdmin(sAgencyManager);
+        
+        Operations.deleteTrip(sAgencyManager, tripDTO);
+        Operations.deleteAirline(sAgencyManager, airlineDTO);
+        Operations.deletePlane(sAgencyManager, planeDTO);
+        Operations.deleteFromPlace(sAgencyManager, fromPlace);
+        Operations.deleteToPlace(sAgencyManager, toPlace);
+        
+    }
     
 }
