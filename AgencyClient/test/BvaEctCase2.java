@@ -174,7 +174,7 @@ public class BvaEctCase2 {
         sAgencyManager.acceptUser(userDTO);
         
         /*LOGIN DO UTILIZADOR*/
-        Operations.signinAsTestUser(sAgencyManager);
+        Operations.signinAsTestUser(sAgencyManager); 
         
         /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
         sAgencyManager.depositToAccount(50000);
