@@ -1236,9 +1236,10 @@ public class TripsManager implements TripsManagerLocal {
         if(purchase.getTSeatCollection().isEmpty())
             return false;
         
-        if(!verifyIfUserHasMoneyToPay(purchase.getUserid(), purchase))
-            throw new NoPermissionException(Config.MSG_NO_PERMISSION_MONEY);
-        
+        if(!verifyIfUserHasMoneyToPay(purchase.getUserid(), purchase)){
+            return false;
+            //throw new NoPermissionException(Config.MSG_NO_PERMISSION_MONEY);
+        }
         //verifying if some trip already done
         for(TSeat seatTmp : purchase.getTSeatCollection())
         {

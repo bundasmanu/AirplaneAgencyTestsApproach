@@ -154,8 +154,14 @@ public class Operations {
             //finish the purchase
             TPurchaseDTO purchaseDTO = sAgencyManager.getActualPurchase();
 
-            sAgencyManager.finishActualPurchase(purchaseDTO);
-
+            boolean ret=sAgencyManager.finishActualPurchase(purchaseDTO);
+            
+            if(ret==false && purchaseDTO!=null){
+                sAgencyManager.removeSeatsOfActualPurchase(purchaseDTO, tripDTO);
+                sAgencyManager.removeActualPurchase(purchaseDTO);
+                return null;
+            }
+            
             return purchaseDTO;
         } catch (Exception e) {
             System.out.println(e.getMessage());
