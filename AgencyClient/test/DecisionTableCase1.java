@@ -93,7 +93,7 @@ public class DecisionTableCase1 {
     public static Collection valuesToTest() {
         return Arrays.asList(new Object[][] {
             /*ESTES 4 TESTES PARA A REGRA 1--> PARA MOSTRAR MSM QUE NAO DEIXA COMPRAR BILHETES*/
-            {true, 0, true, 5 , FeedbackResult.CompraImpossivel},
+            {true, 0, true, 10 , FeedbackResult.CompraImpossivel},
             {true, 0, true, 0 , FeedbackResult.CompraImpossivel},
             {true, 0, false, 10 , FeedbackResult.CompraImpossivel},/*COMPRA IMPOSSIVEL POR DOIS MOTIVOS LIMITE DE LUGARES E É OPERADOR*/
             {true, 0, false, 0 , FeedbackResult.CompraImpossivel},
