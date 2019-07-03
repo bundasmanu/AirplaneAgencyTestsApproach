@@ -37,7 +37,7 @@ public class Operations {
         return userDTO;
     }
     
-    public static boolean createTestUser(AgencyManagerRemote sAgencyManager, TUserDTO tu){
+    public static boolean editTestUser(AgencyManagerRemote sAgencyManager, TUserDTO tu){
         return sAgencyManager.editUser(tu);
     }
     
