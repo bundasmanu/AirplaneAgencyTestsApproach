@@ -370,6 +370,7 @@ public class AgencyManager implements AgencyManagerRemote {
     }
 */
 
+    /*
     @Override
     public List<Log> getLogs(int lines) throws NoPermissionException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -379,6 +380,6 @@ public class AgencyManager implements AgencyManagerRemote {
     public void removeLogs() throws NoPermissionException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+    */
 
 }
