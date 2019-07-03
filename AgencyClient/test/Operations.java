@@ -26,6 +26,11 @@ public class Operations {
         sAgencyManager.signIn(Config.TEST_USERNAME, Config.TEST_PASS);
     }
     
+    public static void signinAsTestUser(AgencyManagerRemote sAgencyManager, TUserDTO userDTO){
+        sAgencyManager.logout();
+        sAgencyManager.signIn(userDTO.getUsername(), userDTO.getPassword());
+    }
+    
     
     public static TUserDTO createTestUser(AgencyManagerRemote sAgencyManager){
         TUserDTO userDTO = new TUserDTO();
@@ -33,6 +38,22 @@ public class Operations {
         userDTO.setPassword(Config.TEST_PASS);
         userDTO.setClientName("Client Name");
         userDTO.setUsertype(logic.Config.CLIENT);
+        sAgencyManager.signUp(userDTO);
+        return userDTO;
+    }
+    
+    public static TUserDTO createTestUser(AgencyManagerRemote sAgencyManager, String usernameTmp, String passwordTmp, boolean isOperator){
+        TUserDTO userDTO = new TUserDTO();
+        userDTO.setUsername(usernameTmp);
+        userDTO.setPassword(passwordTmp);
+        if(!isOperator)
+        {
+            userDTO.setClientName("Client Name");
+            userDTO.setUsertype(logic.Config.CLIENT);
+        }
+        else
+            userDTO.setUsertype(logic.Config.OPERATOR);
+        
         sAgencyManager.signUp(userDTO);
         return userDTO;
     }
