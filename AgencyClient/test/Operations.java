@@ -36,7 +36,15 @@ public class Operations {
         sAgencyManager.signUp(userDTO);
         return userDTO;
     }
-
+    
+    public static boolean createTestUser(AgencyManagerRemote sAgencyManager, TUserDTO tu){
+        return sAgencyManager.editUser(tu);
+    }
+    
+    public static TUserDTO getUser(AgencyManagerRemote sAgencyManager, TUserDTO tu){
+        return sAgencyManager.getTUserDTO(tu.getUsername());
+    }
+    
     public static TPlaceDTO createFromPlace(AgencyManagerRemote sAgencyManager) throws NoPermissionException {
         TPlaceDTO fromPlace = new TPlaceDTO();
         fromPlace.setAddress("Adress xtpo");

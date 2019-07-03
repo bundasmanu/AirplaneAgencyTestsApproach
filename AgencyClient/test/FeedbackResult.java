@@ -1,4 +1,6 @@
 public enum FeedbackResult {
     ValidFeedback,
-    InvalidFeedback
+    InvalidFeedback,
+    CompraImpossivel,
+    CompraComSucesso
 }
