@@ -108,8 +108,8 @@ public class BvaEctCase1{
             //Strong Robust -12
             {-1, true, FeedbackResult.InvalidFeedback},
             {-1, false, FeedbackResult.InvalidFeedback},
-            //{11, true, FeedbackResult.InvalidFeedback}, //BUG: aceita scores >10
-            //{11, false, FeedbackResult.InvalidFeedback}, //BUG: aceita scores >10
+            {11, true, FeedbackResult.InvalidFeedback}, //BUG: accept a feedback with scores >10
+            {11, false, FeedbackResult.InvalidFeedback}, //BUG: accept a feedback with scores >10
             
             
             //Weak Normal - Hybrid - 22
@@ -124,7 +124,7 @@ public class BvaEctCase1{
             {9, false, FeedbackResult.InvalidFeedback},
             {10, false, FeedbackResult.InvalidFeedback},
             
-            //Strong Normal - Hybrid - 42
+            //Strong Normal - Hybrid - 40
             {0, true, FeedbackResult.ValidFeedback},
             {1, true, FeedbackResult.ValidFeedback},
             {3, true, FeedbackResult.ValidFeedback},
@@ -144,9 +144,56 @@ public class BvaEctCase1{
             {7, false, FeedbackResult.InvalidFeedback},
             {8, false, FeedbackResult.InvalidFeedback},
             {9, false, FeedbackResult.InvalidFeedback},
-            {10, false, FeedbackResult.InvalidFeedback}
+            {10, false, FeedbackResult.InvalidFeedback},
             
-            //Weak Robust- Hybrid 
+            //Weak Robust- Hybrid - 52
+            {0, true, FeedbackResult.ValidFeedback},
+            {-1, true, FeedbackResult.InvalidFeedback},
+            {-2, true, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE/2), true, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE) + 1, true, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE), true, FeedbackResult.InvalidFeedback},
+            //{-(Integer.MIN_VALUE/2) - 1, true, FeedbackResult.InvalidFeedback}, //Invalid test. We can't do MIN_VALUE - 1
+            {10, false, FeedbackResult.InvalidFeedback},
+            {11, false, FeedbackResult.InvalidFeedback},
+            {12, false, FeedbackResult.InvalidFeedback},
+            {(Integer.MAX_VALUE/2), false, FeedbackResult.InvalidFeedback},
+            {(Integer.MAX_VALUE - 1), false, FeedbackResult.InvalidFeedback},
+            {Integer.MAX_VALUE, false, FeedbackResult.InvalidFeedback},
+            //{Integer.MAX_VALUE + 1, false, FeedbackResult.InvalidFeedback},//Invalid test. We can't do MAX_VALUE + 1
+            
+
+            //Strong Robust- Hybrid
+            {0, true, FeedbackResult.ValidFeedback},
+            {-1, true, FeedbackResult.InvalidFeedback},
+            {-2, true, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE/2), true, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE) + 1, true, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE), true, FeedbackResult.InvalidFeedback},
+            //{-(Integer.MIN_VALUE/2) - 1, true, FeedbackResult.InvalidFeedback}, //Invalid test. We can't do MIN_VALUE - 1
+            {0, false, FeedbackResult.InvalidFeedback},
+            {-1, false, FeedbackResult.InvalidFeedback},
+            {-2, false, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE/2), false, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE) + 1, false, FeedbackResult.InvalidFeedback},
+            {(Integer.MIN_VALUE), false, FeedbackResult.InvalidFeedback},
+            //{-(Integer.MIN_VALUE/2) - 1, false, FeedbackResult.InvalidFeedback}, //Invalid test. We can't do MIN_VALUE - 1
+
+            {10, false, FeedbackResult.InvalidFeedback},
+            {11, false, FeedbackResult.InvalidFeedback},
+            {12, false, FeedbackResult.InvalidFeedback},
+            {(Integer.MAX_VALUE/2), false, FeedbackResult.InvalidFeedback},
+            {(Integer.MAX_VALUE - 1), false, FeedbackResult.InvalidFeedback},
+            {Integer.MAX_VALUE, false, FeedbackResult.InvalidFeedback},
+            //{Integer.MAX_VALUE + 1, false, FeedbackResult.InvalidFeedback},//Invalid test. We can't do MAX_VALUE + 1
+            {10, true, FeedbackResult.ValidFeedback},
+            {11, true, FeedbackResult.InvalidFeedback}, //BUG: accept a feedback with scores >10
+            {12, true, FeedbackResult.InvalidFeedback}, //BUG: accept a feedback with scores >10
+            {(Integer.MAX_VALUE/2), true, FeedbackResult.InvalidFeedback}, //BUG: accept a feedback with scores >10
+            {(Integer.MAX_VALUE - 1), true, FeedbackResult.InvalidFeedback}, //BUG: accept a feedback with scores >10
+            {Integer.MAX_VALUE, true, FeedbackResult.InvalidFeedback} //BUG: accept a feedback with scores >10
+            //{Integer.MAX_VALUE + 1, true, FeedbackResult.InvalidFeedback},//Invalid test. We can't do MAX_VALUE + 1
+            
         });
     }
 
