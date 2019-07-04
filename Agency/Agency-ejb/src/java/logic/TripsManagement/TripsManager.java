@@ -1154,6 +1154,9 @@ public class TripsManager implements TripsManagerLocal {
         List<TSeat> seatsToRemove = new ArrayList();
         userManager.verifyPermission(username, Config.CLIENT);
         
+        if(purchaseDTO == null)
+            return false;
+        
         TPurchase purchase = purchaseFacade.find(purchaseDTO.getId());
         if(purchase == null)
             return false;
@@ -1206,8 +1209,6 @@ public class TripsManager implements TripsManagerLocal {
         //if the purchase belongs to the user who is editing
         if(!purchase.getUserid().equals(user))
             return false;
-        
-        
         
         user.getTPurchaseCollection().remove(purchase);
         userManager.editTUser(user);

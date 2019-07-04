@@ -26,6 +26,11 @@ public class Operations {
         sAgencyManager.signIn(Config.TEST_USERNAME, Config.TEST_PASS);
     }
     
+    public static void signinAsTestUser(AgencyManagerRemote sAgencyManager, TUserDTO userDTO){
+        sAgencyManager.logout();
+        sAgencyManager.signIn(userDTO.getUsername(), userDTO.getPassword());
+    }
+    
     
     public static TUserDTO createTestUser(AgencyManagerRemote sAgencyManager){
         TUserDTO userDTO = new TUserDTO();

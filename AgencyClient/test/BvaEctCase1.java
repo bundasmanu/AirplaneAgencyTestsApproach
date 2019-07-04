@@ -32,15 +32,15 @@ public class BvaEctCase1{
 
     private static AgencyManagerRemote sAgencyManager;
 
-    static TTripFeedbackDTO tripFeedbackDTO;
-    static TTripDTO tripDTO;
-    FeedbackResult res;
+    private static TTripFeedbackDTO tripFeedbackDTO;
+    private static TTripDTO tripDTO;
+    private FeedbackResult res;
     
-    static TPlaceDTO fromPlace;
-    static TPlaceDTO toPlace;
-    static TAirlineDTO airlineDTO; 
-    static TPlaneDTO planeDTO;
-    static TPurchaseDTO purchaseDTO;
+    private static TPlaceDTO fromPlace;
+    private static TPlaceDTO toPlace;
+    private static TAirlineDTO airlineDTO; 
+    private static TPlaneDTO planeDTO;
+    private static TPurchaseDTO purchaseDTO;
     
     @BeforeClass
     public static void beforeTests() throws NoPermissionException, NamingException {
@@ -69,10 +69,6 @@ public class BvaEctCase1{
         sAgencyManager.depositToAccount(1000);
         
         purchaseDTO = Operations.buyAndFinishPurchase(sAgencyManager, tripDTO);
-        
-        //TODO: dev:
-        //  -loginAsAdmin
-        //  -loginAsOperator
         
     }
             
@@ -109,7 +105,7 @@ public class BvaEctCase1{
             {-1, true, FeedbackResult.InvalidFeedback},
             {-1, false, FeedbackResult.InvalidFeedback},
             {11, true, FeedbackResult.InvalidFeedback}, //BUG: accept a feedback with scores >10
-            {11, false, FeedbackResult.InvalidFeedback}, //BUG: accept a feedback with scores >10
+            {11, false, FeedbackResult.InvalidFeedback},
             
             
             //Weak Normal - Hybrid - 22
@@ -170,15 +166,14 @@ public class BvaEctCase1{
             {(Integer.MIN_VALUE/2), true, FeedbackResult.InvalidFeedback},
             {(Integer.MIN_VALUE) + 1, true, FeedbackResult.InvalidFeedback},
             {(Integer.MIN_VALUE), true, FeedbackResult.InvalidFeedback},
-            //{-(Integer.MIN_VALUE/2) - 1, true, FeedbackResult.InvalidFeedback}, //Invalid test. We can't do MIN_VALUE - 1
+            //{(Integer.MIN_VALUE) - 1, true, FeedbackResult.InvalidFeedback}, //Invalid test. We can't do MIN_VALUE - 1
             {0, false, FeedbackResult.InvalidFeedback},
             {-1, false, FeedbackResult.InvalidFeedback},
             {-2, false, FeedbackResult.InvalidFeedback},
             {(Integer.MIN_VALUE/2), false, FeedbackResult.InvalidFeedback},
             {(Integer.MIN_VALUE) + 1, false, FeedbackResult.InvalidFeedback},
             {(Integer.MIN_VALUE), false, FeedbackResult.InvalidFeedback},
-            //{-(Integer.MIN_VALUE/2) - 1, false, FeedbackResult.InvalidFeedback}, //Invalid test. We can't do MIN_VALUE - 1
-
+            //{(Integer.MIN_VALUE) - 1, false, FeedbackResult.InvalidFeedback}, //Invalid test. We can't do MIN_VALUE - 1
             {10, false, FeedbackResult.InvalidFeedback},
             {11, false, FeedbackResult.InvalidFeedback},
             {12, false, FeedbackResult.InvalidFeedback},

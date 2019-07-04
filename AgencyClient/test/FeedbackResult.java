@@ -2,5 +2,9 @@ public enum FeedbackResult {
     ValidFeedback,
     InvalidFeedback,
     CompraImpossivel,
-    CompraComSucesso
+    CompraComSucesso,
+    InvalidUser,
+    UserWithNoPermissions,
+    MayConsultTrips,
+    MayBuySeatsToTrip
 }
