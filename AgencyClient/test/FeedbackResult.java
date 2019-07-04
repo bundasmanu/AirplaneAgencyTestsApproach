@@ -8,5 +8,3 @@ public enum FeedbackResult {
     MayConsultTrips,
     MayBuySeatsToTrip
 }
-    CompraComSucesso
-}
