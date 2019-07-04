@@ -51,9 +51,8 @@ public class DecisionTableCase2 {
 
     public DecisionTableCase2(String usernameTmp, String passwordTmp, boolean isAcceptedUserTmp, boolean isOperator) {
     
-        //create an user
-        TUserDTO userDTO = Operations.createTestUser(sAgencyManager, usernameTmp, passwordTmp, isOperator);
-        
+        //edit the user
+        this.userDTO.setUsername(usernameTmp);
         
         if(isAcceptedUserTmp)
         {
@@ -113,6 +112,5 @@ public class DecisionTableCase2 {
         Operations.deletePlane(sAgencyManager, planeDTO);
         Operations.deleteFromPlace(sAgencyManager, fromPlace);
         Operations.deleteToPlace(sAgencyManager, toPlace);
-        
     }
 }

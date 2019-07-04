@@ -42,22 +42,14 @@ public class Operations {
         return userDTO;
     }
     
-    public static TUserDTO createTestUser(AgencyManagerRemote sAgencyManager, String usernameTmp, String passwordTmp, boolean isOperator){
-        TUserDTO userDTO = new TUserDTO();
-        userDTO.setUsername(usernameTmp);
-        userDTO.setPassword(passwordTmp);
-        if(!isOperator)
-        {
-            userDTO.setClientName("Client Name");
-            userDTO.setUsertype(logic.Config.CLIENT);
-        }
-        else
-            userDTO.setUsertype(logic.Config.OPERATOR);
-        
-        sAgencyManager.signUp(userDTO);
-        return userDTO;
+    public static boolean editTestUser(AgencyManagerRemote sAgencyManager, TUserDTO tu){
+        return sAgencyManager.editUser(tu);
     }
-
+    
+    public static TUserDTO getUser(AgencyManagerRemote sAgencyManager, TUserDTO tu){
+        return sAgencyManager.getTUserDTO(tu.getUsername());
+    }
+    
     public static TPlaceDTO createFromPlace(AgencyManagerRemote sAgencyManager) throws NoPermissionException {
         TPlaceDTO fromPlace = new TPlaceDTO();
         fromPlace.setAddress("Adress xtpo");

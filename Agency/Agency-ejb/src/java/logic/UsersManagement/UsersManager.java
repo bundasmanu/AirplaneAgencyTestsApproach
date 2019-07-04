@@ -14,7 +14,9 @@ import logic.Config;
 import logic.DTOFactory;
 import logic.NoPermissionException;
 import logic.SignInValue;
+import logic.TPlaneDTO;
 import logic.TUserDTO;
+import logic.TripsManagement.TPlane;
 
 /**
  *
@@ -194,6 +196,25 @@ public class UsersManager implements UsersManagerLocal {
         
         return DTOFactory.getTUserDTOFromTUser(user);
     }
-
+    
+    @Override
+    public boolean editUser(TUserDTO user){
+        
+        /*QUALQUER TIPO DE UTILIZADOR PODE EDITAR UM USER*/
+        
+        TUser tu=this.userFacade.find(user.getId());
+        
+        if(tu == null)
+            return false;
+        
+        tu.setBalance(user.getBalance());
+        tu.setClientname(user.getClientName());
+        tu.setPassword(user.getPassword());
+        tu.setUsername(user.getUsername());
+        
+        userFacade.edit(tu);
+        return true;
+    }
+    
     
 }
