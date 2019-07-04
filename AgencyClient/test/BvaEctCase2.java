@@ -75,7 +75,7 @@ public class BvaEctCase2 {
         this.fromPlace.setCity(fromPlace);
         this.toPlace.setCity(toPlace);
         this.horaAtual=hourLeft;
-        this.trip.setDatetrip(200);
+        this.trip.setDatetrip(100);
         this.limitNumberTrip=limitNumberPersons;
         this.res=feedback;
     }

@@ -202,15 +202,19 @@ public class UsersManager implements UsersManagerLocal {
         
         /*QUALQUER TIPO DE UTILIZADOR PODE EDITAR UM USER*/
         
-        TUser tu=this.userFacade.find(user.getId());
+        TUser tu = this.userFacade.find(user.getId());
         
         if(tu == null)
             return false;
         
-        tu.setBalance(user.getBalance());
-        tu.setClientname(user.getClientName());
+        if(user.getBalance()!= null)
+            tu.setBalance(user.getBalance());
+        if(user.getClientName()!= null)
+            tu.setClientname(user.getClientName());
         tu.setPassword(user.getPassword());
         tu.setUsername(user.getUsername());
+        tu.setUsertype(user.getUsertype());
+        tu.setAccepted(user.getAccepted());
         
         userFacade.edit(tu);
         return true;

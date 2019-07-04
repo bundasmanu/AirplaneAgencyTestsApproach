@@ -1154,6 +1154,9 @@ public class TripsManager implements TripsManagerLocal {
         List<TSeat> seatsToRemove = new ArrayList();
         userManager.verifyPermission(username, Config.CLIENT);
         
+        if(purchaseDTO == null)
+            return false;
+        
         TPurchase purchase = purchaseFacade.find(purchaseDTO.getId());
         if(purchase == null)
             return false;
@@ -1207,8 +1210,6 @@ public class TripsManager implements TripsManagerLocal {
         if(!purchase.getUserid().equals(user))
             return false;
         
-        
-        
         user.getTPurchaseCollection().remove(purchase);
         userManager.editTUser(user);
         
@@ -1236,9 +1237,10 @@ public class TripsManager implements TripsManagerLocal {
         if(purchase.getTSeatCollection().isEmpty())
             return false;
         
-        if(!verifyIfUserHasMoneyToPay(purchase.getUserid(), purchase))
-            throw new NoPermissionException(Config.MSG_NO_PERMISSION_MONEY);
-        
+        if(!verifyIfUserHasMoneyToPay(purchase.getUserid(), purchase)){
+            return false;
+            //throw new NoPermissionException(Config.MSG_NO_PERMISSION_MONEY);
+        }
         //verifying if some trip already done
         for(TSeat seatTmp : purchase.getTSeatCollection())
         {

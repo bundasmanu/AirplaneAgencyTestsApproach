@@ -47,43 +47,123 @@ public class DecisionTableCase2 {
         
         tripDTO = Operations.createTrip(sAgencyManager, airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 100);
         
+        //create an user
+        userDTO = Operations.createTestUser(sAgencyManager);
+        //get the user
+        userDTO=Operations.getUser(sAgencyManager, userDTO);
+        
+        
     }
 
-    public DecisionTableCase2(String usernameTmp, String passwordTmp, boolean isAcceptedUserTmp, boolean isOperator) {
-    
+    public DecisionTableCase2(String usernameTmp, String passwordTmp, boolean isAcceptedUserTmp, boolean isOperator, FeedbackResult res) {
+        
         //edit the user
         this.userDTO.setUsername(usernameTmp);
-        
-        if(isAcceptedUserTmp)
+        this.userDTO.setPassword(passwordTmp);
+        this.userDTO.setAccepted(isAcceptedUserTmp);
+        if(!isOperator){
+            this.userDTO.setUsertype(logic.Config.CLIENT);
+            this.userDTO.setClientName("Client Name");
+            this.userDTO.setBalance(10000.0);
+        }
+        else
         {
-            //accept the user
-            Operations.signinAsAdmin(sAgencyManager);
-            sAgencyManager.acceptUser(userDTO);
+            this.userDTO.setUsertype(logic.Config.OPERATOR);
+            this.userDTO.setClientName("");
         }
         
+        Operations.editTestUser(sAgencyManager, userDTO);
+        userDTO=Operations.getUser(sAgencyManager, userDTO);
+        //login from the normal user
         Operations.signinAsTestUser(sAgencyManager, userDTO);
-        
+        userDTO=Operations.getUser(sAgencyManager, userDTO);
+
+        this.res = res;
     }
     
     @Parameterized.Parameters
     public static Collection valuesToTest() {
         return Arrays.asList(new Object[][] {
-                
-                });
+            
+            //String usernameTmp, String passwordTmp, boolean isAcceptedUserTmp, boolean isOperator, FeedbackResult res
+            {"abc", "12345689", false, false , FeedbackResult.InvalidUser},
+            {"abcdefghi", "123", false, false , FeedbackResult.InvalidUser},
+            {"abcdefghi", "12345689", false, false , FeedbackResult.UserWithNoPermissions},
+            {"abcdefghi", "12345689", true, false , FeedbackResult.MayBuySeatsToTrip},
+            {"abcdefghi", "12345689", true, false , FeedbackResult.MayConsultTrips},
+            {"abcdefghi", "12345689", true, true , FeedbackResult.MayConsultTrips}
+            
+            
+            
+        });
     }
     
     @Test
     public void testSeveral() throws NoPermissionException {
-        boolean validUsername, validPassword;
+        boolean allowedInvalidUsername = false, allowedInvalidPassword = false;
+        boolean noPermissionsNotAcceptedUser = false;
+        boolean noPermissionsIsOperator = false;
+        boolean mayConsultTrips = false;
+        boolean mayBuySeatsToTrips = false;
         
-        //para validar um user é fazer edit do mesmo... se este retornar true com
-        //username com < 8
         
-        //para ver se o consultar trips e o comprar lugares funciam ambos para o
-        //cliente normal devera passar... variaveis temp 
+        allowedInvalidUsername = (userDTO.getUsername().length() < 8);
         
-        //remove the user...
-        //TODO: need to implement code to remove users
+        allowedInvalidPassword = (userDTO.getPassword().length() < 8);
+        
+        mayConsultTrips = (sAgencyManager.findAllTrips().isEmpty()? false: true);
+            
+        purchaseDTO = Operations.buyAndFinishPurchaseCase2(sAgencyManager, tripDTO, 1);
+        mayBuySeatsToTrips = (purchaseDTO == null? false: true);
+
+        //the user did not had permissions...
+        if(mayBuySeatsToTrips == false)
+        {
+            //if isn't a accept user cannot consult trips neither buy seats
+            if(!userDTO.getAccepted())
+                noPermissionsNotAcceptedUser = true;
+            //if has no permissions because the user is an operator
+            else if(userDTO.getUsertype() == logic.Config.OPERATOR)
+                noPermissionsIsOperator = true;
+        }
+        
+        
+        //R1
+        if(allowedInvalidUsername && res == FeedbackResult.InvalidUser)
+        {
+            clearTmpData();
+            assertFalse(true);
+        }
+        //R2
+        else if(allowedInvalidPassword && res == FeedbackResult.InvalidUser)
+        {
+            clearTmpData();
+            assertFalse(true);
+        }
+        //R3
+        else if(noPermissionsNotAcceptedUser && res == FeedbackResult.UserWithNoPermissions)
+        {
+            clearTmpData();
+            assertTrue(true);
+        }
+        //R4
+        else if(userDTO.getUsertype() == logic.Config.CLIENT && mayBuySeatsToTrips && res == FeedbackResult.MayBuySeatsToTrip
+                || userDTO.getUsertype() == logic.Config.CLIENT && mayConsultTrips && res == FeedbackResult.MayConsultTrips)
+        {
+            clearTmpData();
+            assertTrue(true);
+        }
+        //R4
+        else if(userDTO.getUsertype() == logic.Config.OPERATOR && mayConsultTrips && res == FeedbackResult.MayConsultTrips)
+        {
+            clearTmpData();
+            assertTrue(true);
+        }
+        else
+        {
+            clearTmpData();
+            assertFalse(true);
+        }
         
     }
     
@@ -102,9 +182,6 @@ public class DecisionTableCase2 {
 
     static void clearAllData() throws NoPermissionException{
         
-        sAgencyManager.removeSeatsOfActualPurchase(purchaseDTO, tripDTO);
-        sAgencyManager.removeActualPurchase(purchaseDTO);
-        
         Operations.signinAsAdmin(sAgencyManager);
         
         Operations.deleteTrip(sAgencyManager, tripDTO);
@@ -112,5 +189,22 @@ public class DecisionTableCase2 {
         Operations.deletePlane(sAgencyManager, planeDTO);
         Operations.deleteFromPlace(sAgencyManager, fromPlace);
         Operations.deleteToPlace(sAgencyManager, toPlace);
+    }
+
+    private void clearTmpData() throws NoPermissionException {
+        if(purchaseDTO != null)
+        {
+            sAgencyManager.removeSeatsOfActualPurchase(purchaseDTO, tripDTO);
+            sAgencyManager.removeActualPurchase(purchaseDTO);
+        }
+        //put the user as like he was before the test
+        //userDTO = Operations.createTestUser(sAgencyManager);
+        userDTO=Operations.getUser(sAgencyManager, userDTO);
+        userDTO.setUsername(Config.TEST_USERNAME);
+        userDTO.setPassword(Config.TEST_PASS);
+        userDTO.setClientName("Client Name");
+        userDTO.setUsertype(logic.Config.CLIENT);
+        Operations.editTestUser(sAgencyManager, userDTO);
+       
     }
 }
