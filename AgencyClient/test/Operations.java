@@ -142,7 +142,7 @@ public class Operations {
             List<TSeatDTO> seatDTOList = new ArrayList();
 
             for (int i = 0; i < numberSeats; i++) {
-                seatDTOList.add(new TSeatDTO());
+                seatDTOList.add(new TSeatDTO()); 
             }
 
             boolean retorno=sAgencyManager.buySeatsToTrip(tripDTO, seatDTOList);
