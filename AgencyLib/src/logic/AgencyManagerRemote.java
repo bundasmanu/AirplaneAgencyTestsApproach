@@ -98,5 +98,8 @@ public interface AgencyManagerRemote {
     TSeatDTO findAuctionedSeat(int id) throws NoPermissionException;
     List<TSeatDTO> getMyBids() throws NoPermissionException;
     boolean bidAuctionedSeat(TSeatDTO seatDTO) throws NoPermissionException;
-
+    
+    //boolean refundUsers(TTrip trip);
+    boolean cancelTrip2(TTripDTO tripDTO, String username) throws NoPermissionException;
+    
 }

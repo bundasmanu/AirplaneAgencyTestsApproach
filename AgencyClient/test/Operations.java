@@ -174,6 +174,33 @@ public class Operations {
         }
     }
     
+    public static TPurchaseDTO buyAndFinishPurchaseCase3(AgencyManagerRemote sAgencyManager, TTripDTO tripDTO, int numberSeats) throws NoPermissionException {
+        //buy seats
+        try {
+            List<TSeatDTO> seatDTOList = new ArrayList();
+
+            for (int i = 0; i < numberSeats; i++) { 
+                seatDTOList.add(new TSeatDTO());  
+            }
+
+            boolean retorno=sAgencyManager.buySeatsToTrip(tripDTO, seatDTOList);
+            
+            if(retorno==false){
+                return null;
+            }
+            
+            //finish the purchase
+            TPurchaseDTO purchaseDTO = sAgencyManager.getActualPurchase();
+
+            boolean ret=sAgencyManager.finishActualPurchase(purchaseDTO);
+            
+            return purchaseDTO;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    
     public static AgencyManagerRemote initRemoteReferences(AgencyManagerRemote sAgencyManager) {
         Properties prop = new Properties();
 
@@ -211,5 +238,6 @@ public class Operations {
            return null;
         }
     }
+
     
 }

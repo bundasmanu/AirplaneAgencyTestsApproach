@@ -625,7 +625,28 @@ public class TripsManager implements TripsManagerLocal {
         return true;
     }
     
-    private boolean refundUsers(TTrip trip){
+    @Override
+    public boolean cancelTrip2(TTripDTO tripDTO, String username) throws NoPermissionException {
+        boolean resultTmp = false;
+        
+        userManager.verifyPermission(username, Config.OPERATOR);
+        
+        TTrip trip = tripFacade.find(tripDTO.getId());     
+        if(trip == null)
+            return false;
+        
+        if(trip.getDone())
+            return false;
+        
+        trip.setCanceled(true);
+        
+        //when we cancel a trip we need to refund the users who bought seats
+        return refundUsers(trip);
+ 
+    }
+    
+    @Override
+    public boolean refundUsers(TTrip trip){
         boolean result = false;
         
         if(!trip.getTSeatCollection().isEmpty())
@@ -1555,4 +1576,25 @@ public class TripsManager implements TripsManagerLocal {
     private boolean hasBoughSeatsOnTrip(String username, List<TSeat> seats) {
         return getNoOfSeatsFromTripByUser(username, seats) > 0;
     }
+    
+    @Override
+    public TTrip getTrip(TTripDTO t){
+        
+        try{
+            
+            if(t==null){
+                return null;
+            }
+            
+            TTrip tr=tripFacade.find(t.getId());
+            
+            return tr;
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+        
+    }
+    
 }

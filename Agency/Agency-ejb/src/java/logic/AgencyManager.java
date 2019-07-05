@@ -10,6 +10,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import logic.LogsManagement.LogsManagerLocal;
 import logic.TimerManagement.TimerManagerLocal;
+import logic.TripsManagement.TTrip;
 import logic.TripsManagement.TripsManagerLocal;
 import logic.UsersManagement.UsersManagerLocal;
 
@@ -361,6 +362,15 @@ public class AgencyManager implements AgencyManagerRemote {
     @Override
     public TSeatDTO findAuctionedSeat(int id) throws NoPermissionException {
         return tripsManagerLocal.findAuctionedSeat(id, username);
+    }
+    
+    public boolean refundUsers(TTrip trip){
+        return tripsManagerLocal.refundUsers(trip);
+    }
+    
+    @Override
+    public boolean cancelTrip2(TTripDTO tripDTO, String username) throws NoPermissionException{
+        return tripsManagerLocal.cancelTrip2(tripDTO, username);
     }
 
     /*
