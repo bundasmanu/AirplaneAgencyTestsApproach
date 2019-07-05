@@ -29,5 +29,5 @@ public interface UsersManagerLocal {
     TUserDTO findUser(int id);
     void verifyPermission(String username, int permissionType) throws NoPermissionException;
     boolean editUser(TUserDTO user);
-
+    boolean deleteUser(TUserDTO user);
 }

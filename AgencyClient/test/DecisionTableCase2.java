@@ -53,6 +53,15 @@ public class DecisionTableCase2 {
         userDTO=Operations.getUser(sAgencyManager, userDTO);
         
         
+        //accept the user
+        Operations.signinAsAdmin(sAgencyManager);
+        sAgencyManager.acceptUser(userDTO);
+        
+        //signin again as the accepted user
+        Operations.signinAsTestUser(sAgencyManager, userDTO);
+        
+        
+        
     }
 
     public DecisionTableCase2(String usernameTmp, String passwordTmp, boolean isAcceptedUserTmp, boolean isOperator, FeedbackResult res) {
