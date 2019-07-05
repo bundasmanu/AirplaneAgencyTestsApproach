@@ -93,8 +93,6 @@ public class DecisionTableCase2 {
             {"abcdefghi", "12345689", true, false , FeedbackResult.MayConsultTrips},
             {"abcdefghi", "12345689", true, true , FeedbackResult.MayConsultTrips}
             
-            
-            
         });
     }
     
@@ -126,7 +124,6 @@ public class DecisionTableCase2 {
             else if(userDTO.getUsertype() == logic.Config.OPERATOR)
                 noPermissionsIsOperator = true;
         }
-        
         
         //R1
         if(allowedInvalidUsername && res == FeedbackResult.InvalidUser)

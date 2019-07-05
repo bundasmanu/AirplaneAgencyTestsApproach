@@ -42,6 +42,22 @@ public class Operations {
         return userDTO;
     }
     
+    public static TUserDTO createUser(AgencyManagerRemote sAgencyManager, String username, String password, boolean isClient){
+        TUserDTO userDTO = new TUserDTO();
+        userDTO.setUsername(username);
+        userDTO.setPassword(password);
+        if(isClient)
+        {
+            userDTO.setClientName("Client Name");
+            userDTO.setUsertype(logic.Config.CLIENT);
+        }
+        else
+            userDTO.setUsertype(logic.Config.OPERATOR);
+
+        sAgencyManager.signUp(userDTO);
+        return userDTO;
+    }
+    
     public static boolean editTestUser(AgencyManagerRemote sAgencyManager, TUserDTO tu){
         return sAgencyManager.editUser(tu);
     }
@@ -193,6 +209,32 @@ public class Operations {
             TPurchaseDTO purchaseDTO = sAgencyManager.getActualPurchase();
 
             boolean ret=sAgencyManager.finishActualPurchase(purchaseDTO);
+            
+            return purchaseDTO;
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    
+    public static TPurchaseDTO buySeatsToTrip(AgencyManagerRemote sAgencyManager, TTripDTO tripDTO, int numberSeats) throws NoPermissionException {
+        //buy seats
+        try {
+            List<TSeatDTO> seatDTOList = new ArrayList();
+
+            for (int i = 0; i < numberSeats; i++) { 
+                seatDTOList.add(new TSeatDTO());  
+            }
+
+            boolean retorno=sAgencyManager.buySeatsToTrip(tripDTO, seatDTOList);
+            
+            if(retorno==false){
+                return null;
+            }
+            
+            //finish the purchase
+            TPurchaseDTO purchaseDTO = sAgencyManager.getActualPurchase();
             
             return purchaseDTO;
         } catch (Exception e) {
