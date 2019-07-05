@@ -83,6 +83,13 @@ public class AgencyManager implements AgencyManagerRemote {
         return usersManagerLocal.editUser(user);
     }
     
+    @Override
+    public boolean deleteUser(TUserDTO user){
+        return usersManagerLocal.deleteUser(user);
+    }
+    
+    
+    
 //----------------------------------------------------------------------
     //Planes
     @Override

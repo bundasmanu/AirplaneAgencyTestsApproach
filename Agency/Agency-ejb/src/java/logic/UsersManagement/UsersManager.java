@@ -220,5 +220,16 @@ public class UsersManager implements UsersManagerLocal {
         return true;
     }
     
+    @Override
+    public boolean deleteUser(TUserDTO user){
+        TUser tu = this.userFacade.find(user.getId());
+        
+        if(tu == null)
+            return false;
+        
+        userFacade.remove(tu);
+        
+        return true;
+    }
     
 }
