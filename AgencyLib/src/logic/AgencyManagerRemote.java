@@ -23,6 +23,7 @@ public interface AgencyManagerRemote {
     boolean depositToAccount(float amount);
     List<TUserDTO> findAllUsers();
     boolean editUser(TUserDTO user);
+    boolean deleteUser(TUserDTO user);
         
     //planes
     List<TPlaneDTO> findAllPlanes() throws NoPermissionException;

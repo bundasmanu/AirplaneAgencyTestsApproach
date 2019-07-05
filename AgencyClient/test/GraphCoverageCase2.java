@@ -107,7 +107,6 @@ public class GraphCoverageCase2 {
     @Test
     public void T6() throws NoPermissionException{
         
-        
         //signin as normal user
         Operations.signinAsTestUser(sAgencyManager);
         
@@ -125,9 +124,9 @@ public class GraphCoverageCase2 {
         sAgencyManager.acceptUser(auxUser);
         //signin again as aux user
         Operations.signinAsTestUser(sAgencyManager, auxUser);
+        sAgencyManager.depositToAccount(1000);
         //buy seats
         purchaseAuxDTO = Operations.buyAndFinishPurchaseCase2(sAgencyManager, tripDTO, 9);
-        
         
         //now We signin as a normal user
         Operations.signinAsTestUser(sAgencyManager);
@@ -145,10 +144,64 @@ public class GraphCoverageCase2 {
         
         clearAllTmpData();
         
-        assertTrue(true);
+        assertTrue(result);
         
     }
 
+    @Test
+    public void T7() throws NoPermissionException {
+    
+        clearAllTmpData();
+        
+        Operations.signinAsTestUser(sAgencyManager);
+        sAgencyManager.depositToAccount(1000);
+        
+        purchaseDTO = Operations.buySeatsToTrip(sAgencyManager, tripDTO, 9);
+        
+        //the DTO is not updated but the db it is
+        sAgencyManager.removeActualPurchase(purchaseDTO);
+        
+        assertTrue(sAgencyManager.getActualPurchase() == null);
+    }
+    
+    @Test
+    public void T8() throws NoPermissionException{
+        
+        //create the aux user
+        auxUser = Operations.createUser(sAgencyManager, "auxuser", "123", true);
+        //get the user
+        auxUser=Operations.getUser(sAgencyManager, auxUser);
+        //accept the user
+        Operations.signinAsAdmin(sAgencyManager);
+        sAgencyManager.acceptUser(auxUser);
+        //signin again as aux user
+        Operations.signinAsTestUser(sAgencyManager, auxUser);
+        sAgencyManager.depositToAccount(1000);
+        //buy seats
+        purchaseAuxDTO = Operations.buyAndFinishPurchaseCase2(sAgencyManager, tripDTO, 9);
+        
+        //signin as normal user
+        Operations.signinAsTestUser(sAgencyManager);
+        
+        sAgencyManager.depositToAccount(1000);
+        
+        List<TSeatDTO> auctionedSeats = sAgencyManager.findAllAuctionedSeats();
+        TSeatDTO auctionedSeat = auctionedSeats.get(0);
+        auctionedSeat.setPrice(20.0);
+        
+        sAgencyManager.bidAuctionedSeat(auctionedSeat);
+        
+        
+        TPurchaseDTO actualPurchaseTmp = sAgencyManager.getActualPurchase();
+        
+        boolean result = actualPurchaseTmp == null;
+        
+        clearAllTmpData();
+        
+        assertTrue(result);
+        
+    }
+    
     
     private static void clearAllTmpData() throws NoPermissionException{
         
@@ -184,5 +237,7 @@ public class GraphCoverageCase2 {
         Operations.deletePlane(sAgencyManager, planeDTO);
         Operations.deleteFromPlace(sAgencyManager, fromPlace);
         Operations.deleteToPlace(sAgencyManager, toPlace);
+        
+        tripDTO = null;
     }
 }

@@ -182,7 +182,7 @@ public class Operations {
                 sAgencyManager.removeActualPurchase(purchaseDTO);
                 return null;
             }
-            
+            purchaseDTO.setDone(ret);
             return purchaseDTO;
         } catch (Exception e) {
             System.out.println(e.getMessage());
