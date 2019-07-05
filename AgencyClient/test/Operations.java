@@ -243,6 +243,8 @@ public class Operations {
         }
     }
     
+    
+    
     public static AgencyManagerRemote initRemoteReferences(AgencyManagerRemote sAgencyManager) {
         Properties prop = new Properties();
 

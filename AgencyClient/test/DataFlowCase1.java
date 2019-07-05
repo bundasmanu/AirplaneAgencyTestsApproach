@@ -97,7 +97,10 @@ public class DataFlowCase1 {
     @Parameterized.Parameters
     public static Collection valuesToTest() {
         return Arrays.asList(new Object[][] {
-            {0,0,0,true}
+            {0,0,0,true}, /*T1*/
+            {10,1,1,true}, /*T5*/
+            {18,0,2,true}, /*T6*/
+            {10,3,0,true} /*T7*/
         });
     }
     
@@ -105,6 +108,17 @@ public class DataFlowCase1 {
     public void testCase(){
         
         try{
+            
+            /*SE O NUMERO DE SEATS FOR DIFERENTE DO AUCTIONED, É SINAL QUE NECESSITO QUE O USER AUXILIAR EFETUE COMPRAS*/
+            if(numberOfSeats!=auctionedSeats){
+                
+                /*FAZER SIGN IN COM O UTILIZADOR AUXILIAR*/
+                Operations.signinAsTestUser(sAgencyManager, auxTuser);
+                
+                /*REALIZACAO DAS COMPRAS NECESSARIAS PREVIAMENTE ÀS COMPRAS DO USER*/
+                TPurchaseDTO purchase = null;
+                    purchase = Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, (numberOfSeats-auctionedSeats));
+            }
             
             /*LOGIN COM O USER, DE MODO A QUE SEJA POSSÍVEL CRIAR OS SEATS E A PURCHASE*/
             Operations.signinAsTestUser(sAgencyManager);
@@ -123,7 +137,7 @@ public class DataFlowCase1 {
                 List<TSeatDTO> auctionedSeats = sAgencyManager.findAllAuctionedSeats();
                 if (auctionedSeats.isEmpty() == false) {
                     for (TSeatDTO t : allAuctionedSeatsIWant) {
-                        t.setPrice(20.0);
+                        t.setPrice(10.0);
                         allAuctionedSeatsIWant.add(t);
                     }
                 }
@@ -173,6 +187,12 @@ public class DataFlowCase1 {
             if(tp!=null){
                 sAgencyManager.removeSeatsOfActualPurchase(tp, trip);
                 sAgencyManager.removeActualPurchase(tp);
+                
+                /*LIMPAR SEATS COMPRADOS PELO UTILIZADOR AUXILIAR*/
+                Operations.signinAsTestUser(sAgencyManager, auxTuser);
+                sAgencyManager.removeSeatsOfActualPurchase(tp, trip);
+                sAgencyManager.removeActualPurchase(tp);
+                
             }
             
         }
@@ -215,8 +235,21 @@ public class DataFlowCase1 {
         /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
         sAgencyManager.depositToAccount(50000);
         
-        /*CRIACAO DE UM USER AUXILIAR*/
+        /*SIGIN NOVAMENTE COM O ADMINISTRADOR*/
+        Operations.signinAsAdmin(sAgencyManager);
         
+        /*CRIACAO DE UM USER AUXILIAR*/
+        auxTuser=Operations.createUser(sAgencyManager, "Joao", "joao", true);
+        sAgencyManager.acceptUser(user);
+        
+        /*LOGIN COM UTILIZADOR NORMAL*/
+        Operations.signinAsTestUser(sAgencyManager,auxTuser);
+        
+        /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
+        sAgencyManager.depositToAccount(500000);
+        
+        /*VOLTAR NOVAMENTE A EFETUAR LOGIN COM O ADMINISTRADOR*/
+        Operations.signinAsAdmin(sAgencyManager);
         
     }
             
