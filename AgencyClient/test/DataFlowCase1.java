@@ -101,7 +101,7 @@ public class DataFlowCase1 {
             {0,0,0,true}, /*T1 --> FAZ BEM*/
             {10,1,1,true}, /*T5--> FAZ BEM*/
             {10,3,0,true}, /*T7--> FAZ BEM, QUANDO APLICADO SEM OS OUTROS DOIS ANTERIORES*/
-            {20,0,2,true} /*T6--> STRESS AQUI QUANDO SE COMPRA DOIS SEATS AUCTIONED, SO FUNCIONA PARA O 1*/
+            {20,0,2,true} /*T6--> STRESS AQUI QUANDO SE COMPRA DOIS SEATS AUCTIONED, SO FUNCIONA PARA O 1*/ 
             
         });
     }
