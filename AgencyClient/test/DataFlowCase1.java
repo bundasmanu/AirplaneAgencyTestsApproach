@@ -74,6 +74,7 @@ public class DataFlowCase1 {
         Operations.deletePlane(sAgencyManager, planeTrip);
         Operations.deleteFromPlace(sAgencyManager, fromPlace);
         Operations.deleteToPlace(sAgencyManager, toPlace);
+        sAgencyManager.deleteUser(auxTuser);
         
     }
     
@@ -97,10 +98,11 @@ public class DataFlowCase1 {
     @Parameterized.Parameters
     public static Collection valuesToTest() {
         return Arrays.asList(new Object[][] {
-            {0,0,0,true}, /*T1*/
-            {10,1,1,true}, /*T5*/
-            {18,0,2,true}, /*T6*/
-            {10,3,0,true} /*T7*/
+            {0,0,0,true}, /*T1 --> FAZ BEM*/
+            {10,1,1,true}, /*T5--> FAZ BEM*/
+            {10,3,0,true}, /*T7--> FAZ BEM, QUANDO APLICADO SEM OS OUTROS DOIS ANTERIORES*/
+            {20,0,2,true} /*T6--> STRESS AQUI QUANDO SE COMPRA DOIS SEATS AUCTIONED, SO FUNCIONA PARA O 1*/
+            
         });
     }
     
@@ -109,15 +111,33 @@ public class DataFlowCase1 {
         
         try{
             
+            Operations.signinAsAdmin(sAgencyManager);
+            
+            trip=sAgencyManager.findTrip(trip.getId());
+            
+            /*ALTERACAO DO LIMIT PLANE*/
+            if(numberOfSeats!=10){
+                planeTrip.setPlaneLimit(numberOfSeats);
+                sAgencyManager.editPlane(planeTrip);
+                planeTrip=sAgencyManager.findPlane(planeTrip.getId());
+            }
+            
+            TPurchaseDTO purchase = null;
             /*SE O NUMERO DE SEATS FOR DIFERENTE DO AUCTIONED, É SINAL QUE NECESSITO QUE O USER AUXILIAR EFETUE COMPRAS*/
             if(numberOfSeats!=auctionedSeats){
                 
-                /*FAZER SIGN IN COM O UTILIZADOR AUXILIAR*/
+                /*FAZER SIGN IN COM O UTILIZADOR AcUXILIAR*/
                 Operations.signinAsTestUser(sAgencyManager, auxTuser);
                 
                 /*REALIZACAO DAS COMPRAS NECESSARIAS PREVIAMENTE ÀS COMPRAS DO USER*/
-                TPurchaseDTO purchase = null;
-                    purchase = Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, (numberOfSeats-auctionedSeats));
+                purchase = null;
+                if(auctionedSeats!=0 && nonAuctionedSeats!=0){
+                    purchase = Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, (numberOfSeats-auctionedSeats)-1);
+                }
+                if(auctionedSeats==0 && nonAuctionedSeats!=0){
+                    purchase = Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, (numberOfSeats-nonAuctionedSeats));
+                }
+
             }
             
             /*LOGIN COM O USER, DE MODO A QUE SEJA POSSÍVEL CRIAR OS SEATS E A PURCHASE*/
@@ -126,17 +146,17 @@ public class DataFlowCase1 {
             double clientInitialMoney=user.getBalance();
             
             /*COMPRA DOS SEATS*/
-            TPurchaseDTO purchase=null;
+            TPurchaseDTO purchases=null;
             if(auctionedSeats!=0){
-                purchase=Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, auctionedSeats);
+                purchases=Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, auctionedSeats);
             }
             
             /*COMPRA EVENTUAL DE LUGARES LEILOADOS*/
             List<TSeatDTO> allAuctionedSeatsIWant = new ArrayList<TSeatDTO>();
             if (nonAuctionedSeats != 0) {
-                List<TSeatDTO> auctionedSeats = sAgencyManager.findAllAuctionedSeats();
-                if (auctionedSeats.isEmpty() == false) {
-                    for (TSeatDTO t : allAuctionedSeatsIWant) {
+                List<TSeatDTO> listOfAuctionedSeats = sAgencyManager.findAllAuctionedSeats();
+                if (listOfAuctionedSeats.isEmpty() == false) {
+                    for (TSeatDTO t : listOfAuctionedSeats) {
                         t.setPrice(10.0);
                         allAuctionedSeatsIWant.add(t);
                     }
@@ -144,7 +164,7 @@ public class DataFlowCase1 {
                 
                 /*FINALIZACAO DO BID DAS SEATS*/
                 for(TSeatDTO t : allAuctionedSeatsIWant){
-                    sAgencyManager.bidAuctionedSeat(t);
+                    boolean retBid=sAgencyManager.bidAuctionedSeat(t);
                 } 
             }
             
@@ -152,7 +172,13 @@ public class DataFlowCase1 {
             Operations.signinAsAdmin(sAgencyManager);
             
             /*CHAMADA DO MÉTODO A TESTAR*/
-            boolean resultCancelTrip=sAgencyManager.cancelTrip2(trip, user.getUsername());
+            boolean resultCancelTrip=sAgencyManager.cancelTrip2(trip);
+            
+            /*VOLTAR A ATUALIZAR TRIP*/
+            trip.setCanceled(false);
+            sAgencyManager.editTrip(trip);
+            trip=sAgencyManager.findTrip(trip.getId());
+            //trip=Operations.createTrip(sAgencyManager, airlineTrip, fromPlace, toPlace, planeTrip, 50, 4000);
             
             /*VOLTAR A FAZER SIGIN COM O UTILIZADOR*/
             Operations.signinAsTestUser(sAgencyManager);
@@ -161,15 +187,15 @@ public class DataFlowCase1 {
             user=Operations.getUser(sAgencyManager, user);
             
             if(resultCancelTrip==true && result==true && user.getBalance()==clientInitialMoney){
-                limpaDados(purchase);
+                limpaDados(purchase,purchases);
                 assertTrue("",true);
             }
             else if(resultCancelTrip==false && result==false && user.getBalance()==clientInitialMoney){
-                limpaDados(purchase);
+                limpaDados(purchase, purchases);
                 assertTrue("", true);
             }
             else{
-                limpaDados(purchase);
+                limpaDados(purchase, purchases);
                 assertFalse("", true);
             }
             
@@ -180,20 +206,25 @@ public class DataFlowCase1 {
         
     }
     
-    public void limpaDados(TPurchaseDTO tp){
+    public void limpaDados(TPurchaseDTO tp, TPurchaseDTO tp2){
         
+        boolean ret;
         try{
-            
+            int jafoi=0;
+            if(tp2!=null){
+                //Operations.signinAsTestUser(sAgencyManager);
+                sAgencyManager.removeSeatsOfActualPurchase(tp2, trip);
+                sAgencyManager.removeActualPurchase(tp2);
+            }
             if(tp!=null){
-                sAgencyManager.removeSeatsOfActualPurchase(tp, trip);
-                sAgencyManager.removeActualPurchase(tp);
-                
-                /*LIMPAR SEATS COMPRADOS PELO UTILIZADOR AUXILIAR*/
                 Operations.signinAsTestUser(sAgencyManager, auxTuser);
                 sAgencyManager.removeSeatsOfActualPurchase(tp, trip);
                 sAgencyManager.removeActualPurchase(tp);
-                
             }
+            
+            /*APAGAR DA BD OS AUCTIONED SEATS*/
+            Operations.signinAsAdmin(sAgencyManager);
+            ret=sAgencyManager.removeAuctionedSeatsUser(trip);
             
         }
         catch(Exception e){
@@ -235,21 +266,27 @@ public class DataFlowCase1 {
         /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
         sAgencyManager.depositToAccount(50000);
         
+        /*OBTENCAO DA REFERENCIA PARA O USER, JÁ COM O BALANCE ATUALIZADO*/
+        user=Operations.getUser(sAgencyManager, user);
+        
         /*SIGIN NOVAMENTE COM O ADMINISTRADOR*/
         Operations.signinAsAdmin(sAgencyManager);
         
         /*CRIACAO DE UM USER AUXILIAR*/
         auxTuser=Operations.createUser(sAgencyManager, "Joao", "joao", true);
-        sAgencyManager.acceptUser(user);
+        sAgencyManager.acceptUser(auxTuser);
         
         /*LOGIN COM UTILIZADOR NORMAL*/
         Operations.signinAsTestUser(sAgencyManager,auxTuser);
         
         /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
-        sAgencyManager.depositToAccount(500000);
+        sAgencyManager.depositToAccount(50000);
+        
+        /*ATUALIZACAO DA REFERENCIA DO OBJETO, JA ATUALIZA COM O SEU BALANCE*/
+        auxTuser=Operations.getUser(sAgencyManager, auxTuser);
         
         /*VOLTAR NOVAMENTE A EFETUAR LOGIN COM O ADMINISTRADOR*/
-        Operations.signinAsAdmin(sAgencyManager);
+        //Operations.signinAsAdmin(sAgencyManager);
         
     }
             

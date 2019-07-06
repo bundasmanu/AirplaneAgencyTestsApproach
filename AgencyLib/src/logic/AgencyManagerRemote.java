@@ -100,6 +100,9 @@ public interface AgencyManagerRemote {
     boolean bidAuctionedSeat(TSeatDTO seatDTO) throws NoPermissionException;
     
     //boolean refundUsers(TTrip trip);
-    boolean cancelTrip2(TTripDTO tripDTO, String username) throws NoPermissionException;
+    boolean cancelTrip2(TTripDTO tripDTO) throws NoPermissionException;
+    boolean deleteUser(TUserDTO user);
+    boolean removeAuctionedSeatsUser(TTripDTO tripDTO) throws NoPermissionException;
+    boolean removeAuctionedPurchase(TPurchaseDTO t);
     
 }

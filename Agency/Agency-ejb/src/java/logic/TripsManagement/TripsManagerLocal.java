@@ -81,6 +81,8 @@ public interface TripsManagerLocal {
     boolean refundUsers(TTrip trip);
     TTrip getTrip(TTripDTO t);
     boolean cancelTrip2(TTripDTO tripDTO, String username) throws NoPermissionException;
+    boolean removeAuctionedSeatsUser(TTripDTO tripDTO, String username) throws NoPermissionException;
+    boolean removeAuctionedPurchase(TPurchaseDTO t);
     
     //acutioned seats
     List<TSeatDTO> findAllAuctionedSeats(String username) throws NoPermissionException;

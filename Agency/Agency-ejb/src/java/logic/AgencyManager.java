@@ -376,10 +376,20 @@ public class AgencyManager implements AgencyManagerRemote {
     }
     
     @Override
-    public boolean cancelTrip2(TTripDTO tripDTO, String username) throws NoPermissionException{
-        return tripsManagerLocal.cancelTrip2(tripDTO, username);
+    public boolean cancelTrip2(TTripDTO tripDTO) throws NoPermissionException{
+        return tripsManagerLocal.cancelTrip2(tripDTO,username);
     }
-
+    
+    @Override
+    public boolean removeAuctionedSeatsUser(TTripDTO tripDTO) throws NoPermissionException{
+        return tripsManagerLocal.removeAuctionedSeatsUser(tripDTO,username);
+    }
+    
+    @Override
+    public boolean removeAuctionedPurchase(TPurchaseDTO t){
+        return tripsManagerLocal.removeAuctionedPurchase(t);
+    }
+    
     /*
     @Override
     public List<Log> getLogs(int lines) throws NoPermissionException {
