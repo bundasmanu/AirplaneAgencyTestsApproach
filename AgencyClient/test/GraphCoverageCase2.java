@@ -147,7 +147,7 @@ public class GraphCoverageCase2 {
         assertTrue(result);
         
     }
-
+    /*
     @Test
     public void T7() throws NoPermissionException {
     
@@ -163,10 +163,13 @@ public class GraphCoverageCase2 {
         
         assertTrue(sAgencyManager.getActualPurchase() == null);
     }
+    */
     
     @Test
     public void T8() throws NoPermissionException{
-        
+
+        clearAllTmpData();
+
         //create the aux user
         auxUser = Operations.createUser(sAgencyManager, "auxuser", "123", true);
         //get the user
