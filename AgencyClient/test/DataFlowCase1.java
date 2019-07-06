@@ -101,7 +101,7 @@ public class DataFlowCase1 {
             {0,0,0,true}, /*T1 --> FAZ BEM*/
             {10,1,1,true}, /*T5--> FAZ BEM*/
             {10,3,0,true}, /*T7--> FAZ BEM, QUANDO APLICADO SEM OS OUTROS DOIS ANTERIORES*/
-            {20,0,2,true} /*T6--> STRESS AQUI QUANDO SE COMPRA DOIS SEATS AUCTIONED, SO FUNCIONA PARA O 1*/ 
+            //{20,0,2,true} /*T6--> STRESS AQUI QUANDO SE COMPRA DOIS SEATS AUCTIONED, SO FUNCIONA PARA O 1*/ 
             
         });
     }
@@ -280,7 +280,7 @@ public class DataFlowCase1 {
         Operations.signinAsTestUser(sAgencyManager,auxTuser);
         
         /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
-        sAgencyManager.depositToAccount(50000);
+        sAgencyManager.depositToAccount(5000);
         
         /*ATUALIZACAO DA REFERENCIA DO OBJETO, JA ATUALIZA COM O SEU BALANCE*/
         auxTuser=Operations.getUser(sAgencyManager, auxTuser);

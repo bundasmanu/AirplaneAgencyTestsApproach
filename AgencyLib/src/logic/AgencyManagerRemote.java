@@ -102,7 +102,7 @@ public interface AgencyManagerRemote {
     
     //boolean refundUsers(TTrip trip);
     boolean cancelTrip2(TTripDTO tripDTO) throws NoPermissionException;
-    boolean deleteUser(TUserDTO user);
+    //boolean deleteUser(TUserDTO user);
     boolean removeAuctionedSeatsUser(TTripDTO tripDTO) throws NoPermissionException;
     boolean removeAuctionedPurchase(TPurchaseDTO t);
     
