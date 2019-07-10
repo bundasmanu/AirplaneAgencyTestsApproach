@@ -72,12 +72,13 @@ public class GraphCoverageCase1 {
         
         Operations.signinAsAdmin(sAgencyManager);
         
-        Operations.deleteTrip(sAgencyManager, trip);
+        sAgencyManager.deleteAllDataByFind();
+        /*Operations.deleteTrip(sAgencyManager, trip);
         Operations.deleteAirline(sAgencyManager, airlineTrip);
         Operations.deletePlane(sAgencyManager, planeTrip);
         Operations.deleteFromPlace(sAgencyManager, fromPlace);
         Operations.deleteToPlace(sAgencyManager, toPlace);
-        sAgencyManager.deleteUser(auxTuser);
+        sAgencyManager.deleteUser(auxTuser);*/
         
     }
     

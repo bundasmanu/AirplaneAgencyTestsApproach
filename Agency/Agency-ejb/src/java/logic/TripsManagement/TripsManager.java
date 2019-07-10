@@ -1697,15 +1697,15 @@ public class TripsManager implements TripsManagerLocal {
                 seatFacade.remove(i);
             }
             
-            /*List<TPurchase> allPurchases=purchaseFacade.findAll();
-            for(TPurchase i : allPurchases){
-                purchaseFacade.remove(i);
-            }*/
-            
             List<TUser> allUsers= userFacade.findAll();
             for(TUser i : allUsers){
                 i.getTPurchaseCollection().clear();
                 userFacade.edit(i);
+            }
+            
+            List<TPurchase> allPurchases=purchaseFacade.findAll();
+            for(TPurchase i : allPurchases){
+                purchaseFacade.remove(i);
             }
             
             List<TTrip> allTrips=tripFacade.findAll();
