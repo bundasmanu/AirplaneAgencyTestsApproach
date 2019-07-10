@@ -596,6 +596,13 @@ public class TripsManager implements TripsManagerLocal {
         TTrip trip = tripFacade.find(tripDTO.getId());
         if(trip == null)
             return false;
+        /*trip.getTSeatCollection().clear();
+        
+        TAirline air=trip.getAirlineid();
+        air.getTTripCollection().remove(trip);
+        
+        airlineFacade.edit(air);*/
+        
         tripFacade.remove(trip);
         
         return true;
@@ -657,7 +664,9 @@ public class TripsManager implements TripsManagerLocal {
                 TUser tuser = seat.getPurchaseid().getUserid();
                 tuser.getTPurchaseCollection().remove(seat.getPurchaseid());
                 userFacade.edit(tuser);
+                seat.setPurchaseid(null);
                 seatFacade.remove(seat);
+                seat.getPurchaseid().getTSeatCollection().remove(seat);
                 purchaseFacade.remove(seat.getPurchaseid());
             }
 
@@ -1655,6 +1664,73 @@ public class TripsManager implements TripsManagerLocal {
         catch(Exception e){
             System.out.println(e.getMessage());
             return null;
+        }
+        
+    }
+    
+    @Override
+    public void deleteAllData(){
+        
+        try{
+            
+            //seatFacade.deleteAll();
+            //purchaseFacade.deleteAll();
+            planeFacade.deleteAll();
+            placeFacade.deleteAll();
+            airlineFacade.deleteAll();
+            //tripFacade.deleteAll();
+            
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+    }
+    
+    @Override
+    public void deleteAllDataByFind(String username){
+        
+        try{
+            
+            List<TSeat> allSeats=seatFacade.findAll();
+            for(TSeat i : allSeats){
+                seatFacade.remove(i);
+            }
+            
+            /*List<TPurchase> allPurchases=purchaseFacade.findAll();
+            for(TPurchase i : allPurchases){
+                purchaseFacade.remove(i);
+            }*/
+            
+            List<TUser> allUsers= userFacade.findAll();
+            for(TUser i : allUsers){
+                i.getTPurchaseCollection().clear();
+                userFacade.edit(i);
+            }
+            
+            List<TTrip> allTrips=tripFacade.findAll();
+            for(TTrip i : allTrips){
+                tripFacade.remove(i);
+            }
+            
+            List<TAirline> allAirlines=airlineFacade.findAll();
+            for(TAirline i : allAirlines){
+                airlineFacade.remove(i);
+            }
+            
+            List<TPlace> allPlaces=placeFacade.findAll();
+            for(TPlace i : allPlaces){
+                placeFacade.remove(i);
+            }
+            
+            List<TPlane> allPlanes=planeFacade.findAll();
+            for(TPlane i : allPlanes){
+                planeFacade.remove(i);
+            }
+            
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
         }
         
     }

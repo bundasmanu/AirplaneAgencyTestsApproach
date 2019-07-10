@@ -3,7 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package SuiteClass;
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import Operations.Operations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,12 +39,12 @@ import org.junit.runners.Parameterized;
  * @author gustavo
  */
 @RunWith(Parameterized.class)
-public class DataFlowCase1 {
+public class GraphCoverageSuiteCase1 {
     
     /*DADOS NECESSARIOS PARA A EXECUCAO DOS TESTES*/
     
     /*REFERENCIA DO OBJETO REMOTO*/
-    private static AgencyManagerRemote sAgencyManager;
+    //private static AgencyManagerRemote sAgencyManager;
     
     /*DADOS DE UM USER*/
     static TUserDTO  user;
@@ -67,14 +75,14 @@ public class DataFlowCase1 {
     @AfterClass
     public static void tearDownClass() throws NoPermissionException {
         
-        Operations.signinAsAdmin(sAgencyManager);
+        Operations.signinAsAdmin(Operations.getAgencyRemote());
         
-        Operations.deleteTrip(sAgencyManager, trip);
-        Operations.deleteAirline(sAgencyManager, airlineTrip);
-        Operations.deletePlane(sAgencyManager, planeTrip);
-        Operations.deleteFromPlace(sAgencyManager, fromPlace);
-        Operations.deleteToPlace(sAgencyManager, toPlace);
-        sAgencyManager.deleteUser(auxTuser);
+        Operations.deleteTrip(Operations.getAgencyRemote(), trip);
+        Operations.deleteAirline(Operations.getAgencyRemote(), airlineTrip);
+        Operations.deletePlane(Operations.getAgencyRemote(), planeTrip);
+        Operations.deleteFromPlace(Operations.getAgencyRemote(), fromPlace);
+        Operations.deleteToPlace(Operations.getAgencyRemote(), toPlace);
+        Operations.getAgencyRemote().deleteUser(auxTuser);
         
     }
     
@@ -88,7 +96,7 @@ public class DataFlowCase1 {
         
     }
     
-    public DataFlowCase1(int nSeats, int auctSeats, int nonAuctSeats, boolean r) {
+    public GraphCoverageSuiteCase1(int nSeats, int auctSeats, int nonAuctSeats, boolean r) {
         numberOfSeats=nSeats;
         auctionedSeats=auctSeats;
         nonAuctionedSeats=nonAuctSeats;
@@ -111,15 +119,15 @@ public class DataFlowCase1 {
         
         try{
             
-            Operations.signinAsAdmin(sAgencyManager);
+            Operations.signinAsAdmin(Operations.getAgencyRemote());
             
-            trip=sAgencyManager.findTrip(trip.getId());
+            trip=Operations.getAgencyRemote().findTrip(trip.getId());
             
             /*ALTERACAO DO LIMIT PLANE*/
             if(numberOfSeats!=10){
                 planeTrip.setPlaneLimit(numberOfSeats);
-                sAgencyManager.editPlane(planeTrip);
-                planeTrip=sAgencyManager.findPlane(planeTrip.getId());
+                Operations.getAgencyRemote().editPlane(planeTrip);
+                planeTrip=Operations.getAgencyRemote().findPlane(planeTrip.getId());
             }
             
             TPurchaseDTO purchase = null;
@@ -127,34 +135,34 @@ public class DataFlowCase1 {
             if(numberOfSeats!=auctionedSeats){
                 
                 /*FAZER SIGN IN COM O UTILIZADOR AcUXILIAR*/
-                Operations.signinAsTestUser(sAgencyManager, auxTuser);
+                Operations.signinAsTestUser(Operations.getAgencyRemote(), auxTuser);
                 
                 /*REALIZACAO DAS COMPRAS NECESSARIAS PREVIAMENTE ÀS COMPRAS DO USER*/
                 purchase = null;
                 if(auctionedSeats!=0 && nonAuctionedSeats!=0){
-                    purchase = Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, (numberOfSeats-auctionedSeats)-1);
+                    purchase = Operations.buyAndFinishPurchaseCase3(Operations.getAgencyRemote(), trip, (numberOfSeats-auctionedSeats)-1);
                 }
                 if(auctionedSeats==0 && nonAuctionedSeats!=0){
-                    purchase = Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, (numberOfSeats-nonAuctionedSeats));
+                    purchase = Operations.buyAndFinishPurchaseCase3(Operations.getAgencyRemote(), trip, (numberOfSeats-nonAuctionedSeats));
                 }
 
             }
             
             /*LOGIN COM O USER, DE MODO A QUE SEJA POSSÍVEL CRIAR OS SEATS E A PURCHASE*/
-            Operations.signinAsTestUser(sAgencyManager);
+            Operations.signinAsTestUser(Operations.getAgencyRemote());
             
             double clientInitialMoney=user.getBalance();
             
             /*COMPRA DOS SEATS*/
             TPurchaseDTO purchases=null;
             if(auctionedSeats!=0){
-                purchases=Operations.buyAndFinishPurchaseCase3(sAgencyManager, trip, auctionedSeats);
+                purchases=Operations.buyAndFinishPurchaseCase3(Operations.getAgencyRemote(), trip, auctionedSeats);
             }
             
             /*COMPRA EVENTUAL DE LUGARES LEILOADOS*/
             List<TSeatDTO> allAuctionedSeatsIWant = new ArrayList<TSeatDTO>();
             if (nonAuctionedSeats != 0) {
-                List<TSeatDTO> listOfAuctionedSeats = sAgencyManager.findAllAuctionedSeats();
+                List<TSeatDTO> listOfAuctionedSeats = Operations.getAgencyRemote().findAllAuctionedSeats();
                 if (listOfAuctionedSeats.isEmpty() == false) {
                     for (TSeatDTO t : listOfAuctionedSeats) {
                         t.setPrice(10.0);
@@ -165,27 +173,27 @@ public class DataFlowCase1 {
                 /*FINALIZACAO DO BID DAS SEATS*/
                 boolean retBid;
                 for(TSeatDTO t : allAuctionedSeatsIWant){
-                    retBid=sAgencyManager.bidAuctionedSeat(t);
+                    retBid=Operations.getAgencyRemote().bidAuctionedSeat(t);
                 } 
             }
             
             /*SIGIN OPERADOR*/
-            Operations.signinAsAdmin(sAgencyManager);
+            Operations.signinAsAdmin(Operations.getAgencyRemote());
             
             /*CHAMADA DO MÉTODO A TESTAR*/
-            boolean resultCancelTrip=sAgencyManager.cancelTrip2(trip);
+            boolean resultCancelTrip=Operations.getAgencyRemote().cancelTrip2(trip);
             
             /*VOLTAR A ATUALIZAR TRIP*/
             trip.setCanceled(false);
-            sAgencyManager.editTrip(trip);
-            trip=sAgencyManager.findTrip(trip.getId());
+            Operations.getAgencyRemote().editTrip(trip);
+            trip=Operations.getAgencyRemote().findTrip(trip.getId());
             //trip=Operations.createTrip(sAgencyManager, airlineTrip, fromPlace, toPlace, planeTrip, 50, 4000);
             
             /*VOLTAR A FAZER SIGIN COM O UTILIZADOR*/
-            Operations.signinAsTestUser(sAgencyManager);
+            Operations.signinAsTestUser(Operations.getAgencyRemote());
             
             /*OBTENCAO DA NOVA REFERENCIA DO UTILIZADOR*/
-            user=Operations.getUser(sAgencyManager, user);
+            user=Operations.getUser(Operations.getAgencyRemote(), user);
             
             if(resultCancelTrip==true && result==true && user.getBalance()==clientInitialMoney){
                 limpaDados(purchase,purchases);
@@ -214,18 +222,18 @@ public class DataFlowCase1 {
             int jafoi=0;
             if(tp2!=null){
                 //Operations.signinAsTestUser(sAgencyManager);
-                sAgencyManager.removeSeatsOfActualPurchase(tp2, trip);
-                sAgencyManager.removeActualPurchase(tp2);
+                Operations.getAgencyRemote().removeSeatsOfActualPurchase(tp2, trip);
+                Operations.getAgencyRemote().removeActualPurchase(tp2);
             }
             if(tp!=null){
-                Operations.signinAsTestUser(sAgencyManager, auxTuser);
-                sAgencyManager.removeSeatsOfActualPurchase(tp, trip);
-                sAgencyManager.removeActualPurchase(tp);
+                Operations.signinAsTestUser(Operations.getAgencyRemote(), auxTuser);
+                Operations.getAgencyRemote().removeSeatsOfActualPurchase(tp, trip);
+                Operations.getAgencyRemote().removeActualPurchase(tp);
             }
             
             /*APAGAR DA BD OS AUCTIONED SEATS*/
-            Operations.signinAsAdmin(sAgencyManager);
-            ret=sAgencyManager.removeAuctionedSeatsUser(trip);
+            Operations.signinAsAdmin(Operations.getAgencyRemote());
+            ret=Operations.getAgencyRemote().removeAuctionedSeatsUser(trip);
             
         }
         catch(Exception e){
@@ -239,52 +247,52 @@ public class DataFlowCase1 {
         /*REPRESENTA TODA A LOGICA A SER INSTANCIADA ANTES DE DAR INICIO AOS TESTES*/
         
         /*OBTENCAO DA REFERENCIA PARA O OBJETO REMOTO*/
-        sAgencyManager=Operations.initRemoteReferences(sAgencyManager);
+        //sAgencyManager=Operations.initRemoteReferences(sAgencyManager);
         
         /*FAZER LOGIN COM O ADMIN--> PARA CRIAR OS OBJETOS*/
-        Operations.signinAsAdmin(sAgencyManager);
+        Operations.signinAsAdmin(Operations.getAgencyRemote());
         
         /*CRIACAO DE UMA PARTIDA E DE UM DESTINO--> VALORES POR DEFEITOS, INCLUIDOS NA DEFINICAO DO METODO*/
-        fromPlace=Operations.createFromPlace(sAgencyManager);
-        toPlace=Operations.createToPlace(sAgencyManager);
+        fromPlace=Operations.createFromPlace(Operations.getAgencyRemote());
+        toPlace=Operations.createToPlace(Operations.getAgencyRemote());
         
         /*CRIACAO DA COMPANHIA*/
-        airlineTrip=Operations.createAirline(sAgencyManager);
+        airlineTrip=Operations.createAirline(Operations.getAgencyRemote());
         
         /*CRIACAO DO PLANE*/
-        planeTrip=Operations.createPlane(sAgencyManager);/*LIMITE DO AVIAO SAO 10 LUGARES*/
+        planeTrip=Operations.createPlane(Operations.getAgencyRemote());/*LIMITE DO AVIAO SAO 10 LUGARES*/
         
         /*CRIACAO DA TRIP, TENDO EM CONTA O DESTINO, PARTIDA, COMPANHIA E O SEU AVIAO*/
-        trip=Operations.createTrip(sAgencyManager, airlineTrip, fromPlace, toPlace, planeTrip, 50, 4000);/*PRECO DO BILHETE SAO 10, E A HORA DE PARTIDA É 4000*/
+        trip=Operations.createTrip(Operations.getAgencyRemote(), airlineTrip, fromPlace, toPlace, planeTrip, 50, 4000);/*PRECO DO BILHETE SAO 10, E A HORA DE PARTIDA É 4000*/
         
         /*CRIACAO DE UM UTILIZADOR*/
-        user = Operations.createTestUser(sAgencyManager);
-        sAgencyManager.acceptUser(user);
+        user = Operations.createTestUser(Operations.getAgencyRemote());
+        Operations.getAgencyRemote().acceptUser(user);
         
         /*LOGIN COM UTILIZADOR NORMAL*/
-        Operations.signinAsTestUser(sAgencyManager);
+        Operations.signinAsTestUser(Operations.getAgencyRemote());
         
         /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
-        sAgencyManager.depositToAccount(50000);
+        Operations.getAgencyRemote().depositToAccount(50000);
         
         /*OBTENCAO DA REFERENCIA PARA O USER, JÁ COM O BALANCE ATUALIZADO*/
-        user=Operations.getUser(sAgencyManager, user);
+        user=Operations.getUser(Operations.getAgencyRemote(), user);
         
         /*SIGIN NOVAMENTE COM O ADMINISTRADOR*/
-        Operations.signinAsAdmin(sAgencyManager);
+        Operations.signinAsAdmin(Operations.getAgencyRemote());
         
         /*CRIACAO DE UM USER AUXILIAR*/
-        auxTuser=Operations.createUser(sAgencyManager, "Joao", "joao", true);
-        sAgencyManager.acceptUser(auxTuser);
+        auxTuser=Operations.createUser(Operations.getAgencyRemote(), "Joao", "joao", true);
+        Operations.getAgencyRemote().acceptUser(auxTuser);
         
         /*LOGIN COM UTILIZADOR NORMAL*/
-        Operations.signinAsTestUser(sAgencyManager,auxTuser);
+        Operations.signinAsTestUser(Operations.getAgencyRemote(),auxTuser);
         
         /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
-        sAgencyManager.depositToAccount(5000);
+        Operations.getAgencyRemote().depositToAccount(5000);
         
         /*ATUALIZACAO DA REFERENCIA DO OBJETO, JA ATUALIZA COM O SEU BALANCE*/
-        auxTuser=Operations.getUser(sAgencyManager, auxTuser);
+        auxTuser=Operations.getUser(Operations.getAgencyRemote(), auxTuser);
         
         /*VOLTAR NOVAMENTE A EFETUAR LOGIN COM O ADMINISTRADOR*/
         //Operations.signinAsAdmin(sAgencyManager);

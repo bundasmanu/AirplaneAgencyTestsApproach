@@ -95,4 +95,9 @@ public interface TripsManagerLocal {
     List<TTripDTO> getCheapeastTrips(int count);
     List<TTripDTO> getActiveTripsByUser(String username);
     int getNoOfSeatsFromTripByUser(String username, TTripDTO tripDTO);
+    
+    void deleteAllData();
+    /*OUTRA ABORDAGEM*/
+    void deleteAllDataByFind(String usernames);
+    
 }

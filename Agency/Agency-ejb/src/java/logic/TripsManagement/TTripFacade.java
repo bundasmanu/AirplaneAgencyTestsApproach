@@ -72,5 +72,17 @@ public class TTripFacade extends AbstractFacade<TTrip> implements TTripFacadeLoc
         return q.getResultList();
     }
     
+    @Override
+    public boolean deleteAll(){
+        
+        try {
+            Query qu = this.em.createNamedQuery("delete from TTrip");
+            qu.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        
+    }
     
 }

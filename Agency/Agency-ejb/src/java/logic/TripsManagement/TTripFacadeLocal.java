@@ -32,4 +32,7 @@ public interface TTripFacadeLocal {
     List<TTrip> findAllNotDoneAndNotCanceled();
     
     List<TTrip> findLast(int number, String column);
+    
+    boolean deleteAll();
+    
 }

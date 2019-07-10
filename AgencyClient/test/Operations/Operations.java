@@ -1,3 +1,5 @@
+package Operations;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -15,6 +17,13 @@ import logic.TUserDTO;
 
 
 public class Operations {
+    
+    public static AgencyManagerRemote sAgencyManager;
+    
+    public static AgencyManagerRemote getAgencyRemote(){
+        return sAgencyManager;
+    }
+    
     public static void signinAsAdmin(AgencyManagerRemote sAgencyManager){
         sAgencyManager.logout();
         sAgencyManager.signIn(Config.ADMIN_USERNAME, Config.ADMIN_PASS);
@@ -108,7 +117,9 @@ public class Operations {
         tripDTO.setPlaneDTO(planeDTO);
         tripDTO.setPrice(balance);
         tripDTO.setDatetrip(datetrip);
+        System.out.println("\nAqyu5\n"+tripDTO.toString());
         boolean ret=sAgencyManager.addTrip(tripDTO);
+        System.out.println("\nAqyu6\n"+ret);
         return sAgencyManager.findAllTrips().get(0);
     }
     

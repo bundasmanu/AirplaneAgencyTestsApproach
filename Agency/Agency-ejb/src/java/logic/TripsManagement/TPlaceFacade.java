@@ -33,5 +33,17 @@ public class TPlaceFacade extends AbstractFacade<TPlace> implements TPlaceFacade
         super(TPlace.class);
     }
     
+    @Override
+    public boolean deleteAll(){
+        
+        try {
+            Query qu = this.em.createNamedQuery("delete from TPlace");
+            qu.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        
+    }
     
 }

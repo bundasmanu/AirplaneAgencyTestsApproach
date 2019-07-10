@@ -8,6 +8,7 @@ package logic.TripsManagement;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,6 +27,19 @@ public class TAirlineFacade extends AbstractFacade<TAirline> implements TAirline
 
     public TAirlineFacade() {
         super(TAirline.class);
+    }
+    
+    @Override
+    public boolean deleteAll(){
+        
+        try {
+            Query qu = this.em.createNamedQuery("delete from TAirline");
+            qu.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        
     }
     
 }

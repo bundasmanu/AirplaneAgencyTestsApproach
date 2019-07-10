@@ -31,4 +31,6 @@ public interface TPlaceFacadeLocal {
     
     void removeAll();
     
+    boolean deleteAll();
+    
 }

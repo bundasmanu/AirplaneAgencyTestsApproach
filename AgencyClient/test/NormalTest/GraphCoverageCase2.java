@@ -1,3 +1,6 @@
+package NormalTest;
+
+import Operations.Operations;
 import java.util.List;
 import logic.AgencyManagerRemote;
 import logic.NoPermissionException;

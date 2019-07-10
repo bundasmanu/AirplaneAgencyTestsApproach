@@ -29,4 +29,6 @@ public interface TAirlineFacadeLocal {
 
     int count();
     
+    boolean deleteAll();
+    
 }

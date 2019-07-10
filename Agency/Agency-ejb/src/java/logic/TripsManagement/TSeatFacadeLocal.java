@@ -29,6 +29,8 @@ public interface TSeatFacadeLocal {
     List<TSeat> findAll();
 
     List<TSeat> findRange(int[] range);
+    
+    boolean deleteAll();
 
     int count();
     

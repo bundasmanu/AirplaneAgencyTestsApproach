@@ -1,3 +1,5 @@
+package NormalTest;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -22,6 +24,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import Operations.*;
 
 /**
  *
@@ -63,11 +66,13 @@ public class DecisionTableCase1 {
         /*LIMPEZA DE TODOS OS DADOS QUE FORAM CRIADOS AO LONGO DOS TESTES REALIZADOS*/
         Operations.signinAsAdmin(sAgencyManager);
         
+        //sAgencyManager.deleteAllData();
+        
         Operations.deleteTrip(sAgencyManager, trip);
-        Operations.deleteAirline(sAgencyManager, airlineTrip);
-        Operations.deletePlane(sAgencyManager, planeTrip);
         Operations.deleteFromPlace(sAgencyManager, fromPlace);
         Operations.deleteToPlace(sAgencyManager, toPlace);
+        Operations.deletePlane(sAgencyManager, planeTrip);
+        Operations.deleteAirline(sAgencyManager, airlineTrip);
    
     }
     
@@ -214,7 +219,9 @@ public class DecisionTableCase1 {
         planeTrip=Operations.createPlane(sAgencyManager);/*LIMITE DO AVIAO SAO 10 LUGARES*/
         
         /*CRIACAO DA TRIP, TENDO EM CONTA O DESTINO, PARTIDA, COMPANHIA E O SEU AVIAO*/
+        System.out.println("\nEspera criar trip\n");
         trip=Operations.createTrip(sAgencyManager, airlineTrip, fromPlace, toPlace, planeTrip, 50, 100);/*PRECO DO BILHETE SAO 10, E A HORA DE PARTIDA É 100*/
+        System.out.println("\nCriada trip: "+trip.toString()+"\n");
         
         /*CRIACAO DE UM UTILIZADOR*/
         userDTO = Operations.createTestUser(sAgencyManager);

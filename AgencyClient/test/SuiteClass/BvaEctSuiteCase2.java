@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package SuiteClass;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,15 +17,17 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import Operations.*;
+import static Operations.Operations.sAgencyManager;
 
 /**
  *
  * @author gustavo
  */
 @RunWith(Parameterized.class)
-public class BvaEctCase2 {
+public class BvaEctSuiteCase2 {
     
-    private static AgencyManagerRemote sAgencyManager;
+    //private static AgencyManagerRemote sAgencyManager;
     
     static TUserDTO userDTO;
     
@@ -51,13 +54,13 @@ public class BvaEctCase2 {
     @AfterClass
     public static void tearDownClass() throws NoPermissionException {
         
-        Operations.signinAsAdmin(sAgencyManager);
+        Operations.signinAsAdmin(Operations.getAgencyRemote());
         
-        Operations.deleteTrip(sAgencyManager, trip);
-        Operations.deleteAirline(sAgencyManager, airlineTrip);
-        Operations.deletePlane(sAgencyManager, planeTrip);
-        Operations.deleteFromPlace(sAgencyManager, fromPlace);
-        Operations.deleteToPlace(sAgencyManager, toPlace);
+        Operations.deleteTrip(Operations.getAgencyRemote(), trip);
+        Operations.deleteAirline(Operations.getAgencyRemote(), airlineTrip);
+        Operations.deletePlane(Operations.getAgencyRemote(), planeTrip);
+        Operations.deleteFromPlace(Operations.getAgencyRemote(), fromPlace);
+        Operations.deleteToPlace(Operations.getAgencyRemote(), toPlace);
         
     }
     
@@ -71,7 +74,7 @@ public class BvaEctCase2 {
         
     }
     
-    public BvaEctCase2(String fromPlace, String toPlace, int hourLeft, int limitNumberPersons, FeedbackResult feedback) {
+    public BvaEctSuiteCase2(String fromPlace, String toPlace, int hourLeft, int limitNumberPersons, FeedbackResult feedback) {
         this.fromPlace.setCity(fromPlace);
         this.toPlace.setCity(toPlace);
         this.horaAtual=hourLeft;
@@ -210,32 +213,32 @@ public class BvaEctCase2 {
         try{
             
            /*LOGIN COMO OPERADOR--> COLOCAR NA BD OS PARAMETROS ATUALIZADOS, PASSADOS NO CONSTRUTOR*/
-           Operations.signinAsAdmin(sAgencyManager);
-           sAgencyManager.setDate(this.horaAtual);
-           sAgencyManager.editPlace(fromPlace);
-           sAgencyManager.editPlace(toPlace);
-           sAgencyManager.editPlane(planeTrip);
+           Operations.signinAsAdmin(Operations.getAgencyRemote());
+           Operations.getAgencyRemote().setDate(this.horaAtual);
+           Operations.getAgencyRemote().editPlace(fromPlace);
+           Operations.getAgencyRemote().editPlace(toPlace);
+           Operations.getAgencyRemote().editPlane(planeTrip);
            
            /*INSERCAO DE BILHETES NA TRIP*/
            
-           Operations.signinAsTestUser(sAgencyManager);
+           Operations.signinAsTestUser(Operations.getAgencyRemote());
            TPurchaseDTO tpurchase=null;
            if(this.limitNumberTrip!=0){
-                tpurchase=Operations.buyAndFinishPurchaseCase2(sAgencyManager, trip, this.limitNumberTrip);
+                tpurchase=Operations.buyAndFinishPurchaseCase2(Operations.getAgencyRemote(), trip, this.limitNumberTrip);
            }
            
-           Operations.signinAsAdmin(sAgencyManager);
+           Operations.signinAsAdmin(Operations.getAgencyRemote());
            
-           sAgencyManager.editTrip(trip);
-           trip=sAgencyManager.findTrip(trip.getId());
+           Operations.getAgencyRemote().editTrip(trip);
+           trip=Operations.getAgencyRemote().findTrip(trip.getId());
 
             TPurchaseDTO newPurchase = null;
             if (tpurchase != null || limitNumberTrip == 0) {
 
                 /*TENTATIVA DE FAZER MAIS UMA COMPRA*/
-                Operations.signinAsTestUser(sAgencyManager);
+                Operations.signinAsTestUser(Operations.getAgencyRemote());
 
-                newPurchase = Operations.buyAndFinishPurchaseCase2(sAgencyManager, trip, 1);
+                newPurchase = Operations.buyAndFinishPurchaseCase2(Operations.getAgencyRemote(), trip, 1);
             }
            
             if(newPurchase!=null && this.res==FeedbackResult.ValidFeedback){
@@ -261,44 +264,48 @@ public class BvaEctCase2 {
     
     public void limpaDados(TPurchaseDTO tpurchase, TPurchaseDTO newPurchase) throws NoPermissionException{
         if (tpurchase != null) {
-            sAgencyManager.removeSeatsOfActualPurchase(tpurchase, trip);
-            sAgencyManager.removeActualPurchase(tpurchase);
+            Operations.getAgencyRemote().removeSeatsOfActualPurchase(tpurchase, trip);
+            Operations.getAgencyRemote().removeActualPurchase(tpurchase);
         }
         if (newPurchase != null) {
-            sAgencyManager.removeSeatsOfActualPurchase(newPurchase, trip);
-            sAgencyManager.removeActualPurchase(newPurchase);
+            Operations.getAgencyRemote().removeSeatsOfActualPurchase(newPurchase, trip);
+            Operations.getAgencyRemote().removeActualPurchase(newPurchase);
         }
+        
+        /*APAGAR DA BD OS AUCTIONED SEATS*/
+        /*Operations.signinAsAdmin(sAgencyManager);
+        boolean ret=sAgencyManager.removeAuctionedSeatsUser(trip);*/
     }
     
     public static void logicOfTests() throws NoPermissionException{
         
-        sAgencyManager=Operations.initRemoteReferences(sAgencyManager);
+        //sAgencyManager=Operations.initRemoteReferences(sAgencyManager);
         
         /*Login do admin*/
-        Operations.signinAsAdmin(sAgencyManager);
+        Operations.signinAsAdmin(Operations.getAgencyRemote());
         
         /*Adicao dos places*/
-        fromPlace=Operations.createFromPlace(sAgencyManager);
-        toPlace=Operations.createToPlace(sAgencyManager);
+        fromPlace=Operations.createFromPlace(Operations.getAgencyRemote());
+        toPlace=Operations.createToPlace(Operations.getAgencyRemote());
         
         /*CRIACAO AIRLINE*/
-        airlineTrip=Operations.createAirline(sAgencyManager);
+        airlineTrip=Operations.createAirline(Operations.getAgencyRemote());
         
         /*CRIACAO DO PLANE*/
-        planeTrip=Operations.createPlane(sAgencyManager);
+        planeTrip=Operations.createPlane(Operations.getAgencyRemote());
         
         /*CRIACAO DA TRIP*/
-        trip=Operations.createTrip(sAgencyManager, airlineTrip, fromPlace, toPlace, planeTrip, 50, 100);
+        trip=Operations.createTrip(Operations.getAgencyRemote(), airlineTrip, fromPlace, toPlace, planeTrip, 50, 100);
         
         /*CRIACAO DO UTILIZADOR*/
-        userDTO = Operations.createTestUser(sAgencyManager);
-        sAgencyManager.acceptUser(userDTO);
+        userDTO = Operations.createTestUser(Operations.getAgencyRemote());
+        Operations.getAgencyRemote().acceptUser(userDTO);
         
         /*LOGIN DO UTILIZADOR*/
-        Operations.signinAsTestUser(sAgencyManager); 
+        Operations.signinAsTestUser(Operations.getAgencyRemote()); 
         
         /*USER QUE ESTA LOGADO, DEPOSITAR DINHEIRO*/
-        sAgencyManager.depositToAccount(50000);
+        Operations.getAgencyRemote().depositToAccount(50000);
         
     }
     

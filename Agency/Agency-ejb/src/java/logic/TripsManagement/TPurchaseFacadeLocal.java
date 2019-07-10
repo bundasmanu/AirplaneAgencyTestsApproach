@@ -31,6 +31,7 @@ public interface TPurchaseFacadeLocal {
     int count();
     
     List<TPurchase> findAllNotDonePurchasesOfUser(TUser user);
-
+    
+    boolean deleteAll();
     
 }

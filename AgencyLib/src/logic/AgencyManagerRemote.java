@@ -105,5 +105,7 @@ public interface AgencyManagerRemote {
     //boolean deleteUser(TUserDTO user);
     boolean removeAuctionedSeatsUser(TTripDTO tripDTO) throws NoPermissionException;
     boolean removeAuctionedPurchase(TPurchaseDTO t);
+    void deleteAllData();
+    void deleteAllDataByFind();
     
 }

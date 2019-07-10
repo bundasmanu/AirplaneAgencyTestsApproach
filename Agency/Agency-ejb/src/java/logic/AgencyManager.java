@@ -390,6 +390,16 @@ public class AgencyManager implements AgencyManagerRemote {
         return tripsManagerLocal.removeAuctionedPurchase(t);
     }
     
+    @Override
+    public void deleteAllData(){
+        tripsManagerLocal.deleteAllData();
+    }
+    
+    @Override
+    public void deleteAllDataByFind(){
+        tripsManagerLocal.deleteAllDataByFind(username);
+    }
+    
     /*
     @Override
     public List<Log> getLogs(int lines) throws NoPermissionException {

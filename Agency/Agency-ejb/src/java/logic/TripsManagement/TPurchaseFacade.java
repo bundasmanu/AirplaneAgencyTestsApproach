@@ -47,4 +47,17 @@ public class TPurchaseFacade extends AbstractFacade<TPurchase> implements TPurch
         return q.getResultList();
     }
     
+    @Override
+    public boolean deleteAll(){
+        
+        try {
+            Query qu = this.em.createNamedQuery("delete from TPurchase");
+            qu.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        
+    }
+    
 }

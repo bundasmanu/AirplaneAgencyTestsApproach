@@ -128,5 +128,18 @@ public class TSeatFacade extends AbstractFacade<TSeat> implements TSeatFacadeLoc
         Query q = getEntityManager().createQuery(cq);
         return q.getResultList();
     }
-
+    
+    @Override
+    public boolean deleteAll(){
+        
+        try {
+            Query qu = this.em.createNamedQuery("delete from TSeat");
+            qu.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        
     }
+    
+}
