@@ -500,14 +500,22 @@ public class TripsManager implements TripsManagerLocal {
     public boolean addTrip(TTripDTO tripDTO, String username) throws NoPermissionException {
         userManager.verifyPermission(username, Config.OPERATOR);
         
+        System.out.println("Initilizated the DEBUG of add trip. ");
+        
         TPlace fromPlace = placeFacade.find(tripDTO.getFromPlaceDTO().getId());     
         if(fromPlace == null)
             return false;
+        
+        System.out.println("Can found the from place.");
+        
         TPlace toPlace = placeFacade.find(tripDTO.getToPlaceDTO().getId());     
         if(toPlace == null)
             return false;
         
+        System.out.println("Can found the to place.");
+        
         if (Objects.equals(fromPlace.getId(), toPlace.getId())) {
+            System.out.println("the fromPlace and toPlace are the same.");
             return false;
         }
         
@@ -515,12 +523,18 @@ public class TripsManager implements TripsManagerLocal {
         if(airline == null)
             return false;
         
+        System.out.println("Can found the airline.");
+        
         TPlane plane = planeFacade.find(tripDTO.getPlaneDTO().getId());
         if(plane == null)
             return false;
         
+        System.out.println("Can found the plane.");
+        
         if(!validateTripDTO(tripDTO))
             return false;
+        
+        System.out.println("Validated the trip.");
         
         TTrip trip = new TTrip();
         trip.setFromplaceid(fromPlace);
@@ -745,13 +759,21 @@ public class TripsManager implements TripsManagerLocal {
         if(tripDTO == null)
             return false;
         
+        System.out.println("Validating the trip: the tripDTO it isn't null.");
+        
         if(tripDTO.getPrice() == null || tripDTO.getPrice()<0)
             return false;
         
+        System.out.println("Validating the trip: the price isnt null and is higher than 0");
+                
+        System.out.println("tripDTO.getDatetrip(): " + tripDTO.getDatetrip());
+        System.out.println("timerManager.getDate()): " + timerManager.getDate());
+
         if(tripDTO.getDatetrip() == null || tripDTO.getDatetrip() <= timerManager.getDate())
             return false;
         
-        
+        System.out.println("Validating the trip: the date of the date is lower than the actual date");
+
         return true;
     }
 
@@ -1706,7 +1728,7 @@ public class TripsManager implements TripsManagerLocal {
             List<TPurchase> allPurchases=purchaseFacade.findAll();
             for(TPurchase i : allPurchases){
                 purchaseFacade.remove(i);
-            }
+            }            
             
             List<TTrip> allTrips=tripFacade.findAll();
             for(TTrip i : allTrips){
@@ -1726,6 +1748,12 @@ public class TripsManager implements TripsManagerLocal {
             List<TPlane> allPlanes=planeFacade.findAll();
             for(TPlane i : allPlanes){
                 planeFacade.remove(i);
+            }
+            
+            allUsers= userFacade.findAll();
+            for(TUser i : allUsers){
+                if(i.getUsertype() == Config.CLIENT)
+                    userFacade.remove(i);
             }
             
         }

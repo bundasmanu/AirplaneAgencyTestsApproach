@@ -222,17 +222,19 @@ public class BvaEctCase1{
    
     static void clearAllData() throws NoPermissionException{
         
-        sAgencyManager.removeSeatsOfActualPurchase(purchaseDTO, tripDTO);
-        sAgencyManager.removeActualPurchase(purchaseDTO);
+        //sAgencyManager.removeSeatsOfActualPurchase(purchaseDTO, tripDTO);
+        //sAgencyManager.removeActualPurchase(purchaseDTO);
         
         Operations.signinAsAdmin(sAgencyManager);
         
+        sAgencyManager.deleteAllDataByFind();
+        /*
         Operations.deleteTrip(sAgencyManager, tripDTO);
         Operations.deleteAirline(sAgencyManager, airlineDTO);
         Operations.deletePlane(sAgencyManager, planeDTO);
         Operations.deleteFromPlace(sAgencyManager, fromPlace);
         Operations.deleteToPlace(sAgencyManager, toPlace);
-        
+        */
     }
     
 }

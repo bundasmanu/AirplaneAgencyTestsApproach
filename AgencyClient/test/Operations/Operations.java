@@ -118,6 +118,8 @@ public class Operations {
         tripDTO.setPrice(balance);
         tripDTO.setDatetrip(datetrip);
         System.out.println("\nAqyu5\n"+tripDTO.toString());
+        System.out.println("\nAqyu5.1 ALL TRIPS\n"+ sAgencyManager.findAllTrips());
+        
         boolean ret=sAgencyManager.addTrip(tripDTO);
         System.out.println("\nAqyu6\n"+ret);
         return sAgencyManager.findAllTrips().get(0);

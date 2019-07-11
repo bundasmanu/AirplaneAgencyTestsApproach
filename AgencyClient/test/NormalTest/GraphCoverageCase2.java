@@ -50,19 +50,28 @@ public class GraphCoverageCase2 {
         airlineDTO = Operations.createAirline(sAgencyManager);
         planeDTO = Operations.createPlane(sAgencyManager);
         
-        tripDTO = Operations.createTrip(sAgencyManager, airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 100);
+        tripDTO = Operations.createTrip(sAgencyManager, airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 1000);
         
+        
+         System.out.println("userDTO: " + userDTO);
         //create an user
         userDTO = Operations.createTestUser(sAgencyManager);
+        
+        System.out.println("userDTO: " + userDTO);
         //get the user
         userDTO=Operations.getUser(sAgencyManager, userDTO);
+        
+        System.out.println("userDTO: " + userDTO);
         
         //accept the user
         Operations.signinAsAdmin(sAgencyManager);
         sAgencyManager.acceptUser(userDTO);
         
+        System.out.println("userDTO: " + userDTO);
+         
         //signin again as the accepted user
         Operations.signinAsTestUser(sAgencyManager, userDTO);
+        
     }
     
     @AfterClass
@@ -95,9 +104,17 @@ public class GraphCoverageCase2 {
         
         sAgencyManager.depositToAccount(1000);
         
+        
+        System.out.println("userDTO: " + userDTO);
+        System.out.println("tripDTO: " + tripDTO);
+        
+        
         //since the plane has limitation 10 we buy 9 seats and finish the purchase... 
         purchaseDTO = Operations.buySeatsToTrip(sAgencyManager, tripDTO, 1);
-
+        
+        System.out.println("purchaseDTO: " + purchaseDTO);
+        System.out.println("sAgencyManager.getActualPurchase(): " + sAgencyManager.getActualPurchase());
+        
         TPurchaseDTO actualPurchaseTmp = sAgencyManager.getActualPurchase();
         
         boolean result = purchaseDTO.getId().equals(actualPurchaseTmp.getId());
@@ -237,13 +254,7 @@ public class GraphCoverageCase2 {
     static void clearAllData() throws NoPermissionException{
         
         Operations.signinAsAdmin(sAgencyManager);
-        
-        Operations.deleteTrip(sAgencyManager, tripDTO);
-        Operations.deleteAirline(sAgencyManager, airlineDTO);
-        Operations.deletePlane(sAgencyManager, planeDTO);
-        Operations.deleteFromPlace(sAgencyManager, fromPlace);
-        Operations.deleteToPlace(sAgencyManager, toPlace);
-        
+        sAgencyManager.deleteAllDataByFind();
         tripDTO = null;
     }
 }

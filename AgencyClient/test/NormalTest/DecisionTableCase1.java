@@ -63,16 +63,8 @@ public class DecisionTableCase1 {
     @AfterClass
     public static void tearDownClass() throws NoPermissionException {
         
-        /*LIMPEZA DE TODOS OS DADOS QUE FORAM CRIADOS AO LONGO DOS TESTES REALIZADOS*/
         Operations.signinAsAdmin(sAgencyManager);
-        
-        //sAgencyManager.deleteAllData();
-        
-        Operations.deleteTrip(sAgencyManager, trip);
-        Operations.deleteFromPlace(sAgencyManager, fromPlace);
-        Operations.deleteToPlace(sAgencyManager, toPlace);
-        Operations.deletePlane(sAgencyManager, planeTrip);
-        Operations.deleteAirline(sAgencyManager, airlineTrip);
+        sAgencyManager.deleteAllDataByFind();
    
     }
     
@@ -200,36 +192,32 @@ public class DecisionTableCase1 {
     
     public static void logicOfTests() throws NoPermissionException{
         
-        /*DESCRICAO DE TODO O CONTEUDO INICIAL, QUE PERMITE VERIFICAR SE UM DETERMINADO TIPO DE UTILIZADOR PODE EFETUAR UMA COMPRA NO SISTEMA*/
+        sAgencyManager= Operations.initRemoteReferences(sAgencyManager);
         
-        /*OBTENCAO DA REFERENCIA PARA O OBJETO REMOTO*/
-        sAgencyManager=Operations.initRemoteReferences(sAgencyManager);
-        
-        /*Login do admin*/
         Operations.signinAsAdmin(sAgencyManager);
+
+        fromPlace = Operations.createFromPlace(sAgencyManager);
+        toPlace = Operations.createToPlace(sAgencyManager);
         
-        /*CRIACAO DE UMA PARTIDA E DE UM DESTINO--> VALORES POR DEFEITOS, INCLUIDOS NA DEFINICAO DO METODO*/
-        fromPlace=Operations.createFromPlace(sAgencyManager);
-        toPlace=Operations.createToPlace(sAgencyManager);
-        
-        /*CRIACAO DA COMPANHIA*/
-        airlineTrip=Operations.createAirline(sAgencyManager);
-        
-        /*CRIACAO DO PLANE*/
-        planeTrip=Operations.createPlane(sAgencyManager);/*LIMITE DO AVIAO SAO 10 LUGARES*/
-        
-        /*CRIACAO DA TRIP, TENDO EM CONTA O DESTINO, PARTIDA, COMPANHIA E O SEU AVIAO*/
-        System.out.println("\nEspera criar trip\n");
-        trip=Operations.createTrip(sAgencyManager, airlineTrip, fromPlace, toPlace, planeTrip, 50, 100);/*PRECO DO BILHETE SAO 10, E A HORA DE PARTIDA É 100*/
-        System.out.println("\nCriada trip: "+trip.toString()+"\n");
-        
-        /*CRIACAO DE UM UTILIZADOR*/
+        airlineTrip = Operations.createAirline(sAgencyManager);
+        planeTrip = Operations.createPlane(sAgencyManager);
+                System.out.println("\nEspera criar trip\n");
+
+        trip = Operations.createTrip(sAgencyManager, airlineTrip, fromPlace, toPlace, planeTrip, 50.0, 1000);
+                System.out.println("\nCriada trip: "+trip.toString()+"\n");
+
+        //create an user
         userDTO = Operations.createTestUser(sAgencyManager);
-        sAgencyManager.acceptUser(userDTO);
-        
-        /*OBTENCAO DO DTO DO USER COMPLETO*/
+        //get the user
         userDTO=Operations.getUser(sAgencyManager, userDTO);
         
+        
+        //accept the user
+        Operations.signinAsAdmin(sAgencyManager);
+        sAgencyManager.acceptUser(userDTO);
+        
+        //signin again as the accepted user
+        Operations.signinAsTestUser(sAgencyManager, userDTO);
     }
     
 }
