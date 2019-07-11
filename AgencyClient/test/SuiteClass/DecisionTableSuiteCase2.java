@@ -194,13 +194,8 @@ public class DecisionTableSuiteCase2 {
 
     static void clearAllData() throws NoPermissionException{
         
-        Operations.signinAsAdmin(Operations.sAgencyManager);
-        
-        Operations.deleteTrip(Operations.sAgencyManager, tripDTO);
-        Operations.deleteAirline(Operations.sAgencyManager, airlineDTO);
-        Operations.deletePlane(Operations.sAgencyManager, planeDTO);
-        Operations.deleteFromPlace(Operations.sAgencyManager, fromPlace);
-        Operations.deleteToPlace(Operations.sAgencyManager, toPlace);
+        Operations.signinAsAdmin(Operations.getAgencyRemote());
+        Operations.getAgencyRemote().deleteAllDataByFind();
     }
 
     private void clearTmpData() throws NoPermissionException {

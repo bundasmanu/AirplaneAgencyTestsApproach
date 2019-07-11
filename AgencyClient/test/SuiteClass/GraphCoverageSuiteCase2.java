@@ -243,12 +243,7 @@ public class GraphCoverageSuiteCase2 {
     static void clearAllData() throws NoPermissionException{
         
         Operations.signinAsAdmin(Operations.getAgencyRemote());
-        
-        Operations.deleteTrip(Operations.getAgencyRemote(), tripDTO);
-        Operations.deleteAirline(Operations.getAgencyRemote(), airlineDTO);
-        Operations.deletePlane(Operations.getAgencyRemote(), planeDTO);
-        Operations.deleteFromPlace(Operations.getAgencyRemote(), fromPlace);
-        Operations.deleteToPlace(Operations.getAgencyRemote(), toPlace);
+        Operations.getAgencyRemote().deleteAllDataByFind();
         
         tripDTO = null;
     }

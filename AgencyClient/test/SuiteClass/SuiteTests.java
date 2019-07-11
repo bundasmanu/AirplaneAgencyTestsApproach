@@ -21,7 +21,7 @@ import SuiteClass.*;
  * @author gustavo
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({/*BvaEctSuiteCase1.class,*/ DecisionTableSuiteCase1.class, DecisionTableSuiteCase2.class, GraphCoverageSuiteCase1.class, GraphCoverageSuiteCase2.class})
+@Suite.SuiteClasses({BvaEctSuiteCase1.class,BvaEctSuiteCase2.class,DecisionTableSuiteCase1.class, DecisionTableSuiteCase2.class, GraphCoverageSuiteCase1.class, GraphCoverageSuiteCase2.class})
 public class SuiteTests {
 
     @BeforeClass

@@ -55,12 +55,7 @@ public class BvaEctSuiteCase2 {
     public static void tearDownClass() throws NoPermissionException {
         
         Operations.signinAsAdmin(Operations.getAgencyRemote());
-        
-        Operations.deleteTrip(Operations.getAgencyRemote(), trip);
-        Operations.deleteAirline(Operations.getAgencyRemote(), airlineTrip);
-        Operations.deletePlane(Operations.getAgencyRemote(), planeTrip);
-        Operations.deleteFromPlace(Operations.getAgencyRemote(), fromPlace);
-        Operations.deleteToPlace(Operations.getAgencyRemote(), toPlace);
+        Operations.getAgencyRemote().deleteAllDataByFind();
         
     }
     
