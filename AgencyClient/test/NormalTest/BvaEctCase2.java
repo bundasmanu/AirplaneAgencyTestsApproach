@@ -56,9 +56,6 @@ public class BvaEctCase2 {
     public static void tearDownClass() throws NoPermissionException {
         
         Operations.signinAsAdmin(sAgencyManager);
-        
-        System.out.println(trip.toString()+"\tAqui 2");
-        
         sAgencyManager.deleteAllDataByFind();
         /*Operations.deleteTrip(sAgencyManager, trip);
         Operations.deleteAirline(sAgencyManager, airlineTrip);

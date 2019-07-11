@@ -23,7 +23,7 @@ public class TestRunner {
         
         System.err.println("Percentagem de acertos:"+res+"%");
         System.err.println("Tempo gasto: "+tempo);
-        System.out.println(result.wasSuccessful());
+        System.out.println("Sucesso nos testes: " + result.wasSuccessful());
         
     }
     

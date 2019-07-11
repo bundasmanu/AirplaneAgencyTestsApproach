@@ -76,6 +76,7 @@ public class GraphCoverageSuiteCase1 {
     public static void tearDownClass() throws NoPermissionException {
         
         Operations.signinAsAdmin(Operations.getAgencyRemote());
+        Operations.getAgencyRemote().deleteUser(auxTuser);
         Operations.getAgencyRemote().deleteAllDataByFind();
         
     }
