@@ -21,8 +21,10 @@ public class TestRunner {
         double res=100-((double)testes_falharam/testes_a_testar)*100;
         int tempo= (int) (result.getRunTime()/1000);
         
-        System.err.println("Percentagem de acertos:"+res+"%");
-        System.err.println("Tempo gasto: "+tempo);
+        System.out.println("Nº total de testes efetuados:"+testes_a_testar);
+        System.out.println("Nº total de testes que falharam:"+testes_falharam);
+        System.out.println("Percentagem de acertos:"+res+"%");
+        System.out.println("Tempo gasto: "+tempo);
         System.out.println("Sucesso nos testes: " + result.wasSuccessful());
         
     }

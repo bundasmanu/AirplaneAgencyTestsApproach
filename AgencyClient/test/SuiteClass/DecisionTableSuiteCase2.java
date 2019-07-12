@@ -51,7 +51,7 @@ public class DecisionTableSuiteCase2 {
         airlineDTO = Operations.createAirline(Operations.sAgencyManager);
         planeDTO = Operations.createPlane(Operations.sAgencyManager);
         
-        tripDTO = Operations.createTrip(Operations.sAgencyManager, airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 100);
+        tripDTO = Operations.createTrip(Operations.sAgencyManager, airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 1000);
         
         //create an user
         userDTO = Operations.createTestUser(Operations.sAgencyManager);

@@ -49,7 +49,6 @@ public class BvaEctCase2 {
     public static void setUpClass() throws NoPermissionException {
         
         logicOfTests();
-        System.out.println(trip.toString()+"\nAqui");
     }
     
     @AfterClass
@@ -295,11 +294,8 @@ public class BvaEctCase2 {
         /*CRIACAO DO PLANE*/
         planeTrip=Operations.createPlane(sAgencyManager);
         
-        System.out.println("\nAqyu3\n");
         /*CRIACAO DA TRIP*/
         trip=Operations.createTrip(sAgencyManager, airlineTrip, fromPlace, toPlace, planeTrip, 50, 100);
-        
-        System.out.println("\nAqyu4\n");
         
         /*CRIACAO DO UTILIZADOR*/
         userDTO = Operations.createTestUser(sAgencyManager);

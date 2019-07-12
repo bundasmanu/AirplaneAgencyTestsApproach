@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package SuiteClass;
-
 import Operations.Operations;
 import java.util.List;
 import logic.AgencyManagerRemote;
@@ -41,12 +40,11 @@ public class GraphCoverageSuiteCase2 {
     private static TPurchaseDTO purchaseDTO;
 
     public GraphCoverageSuiteCase2() {
-        
     }
     
     @BeforeClass
     public static void setUpClass() throws NoPermissionException {
-        //sAgencyManager= Operations.initRemoteReferences(Operations.getAgencyRemote());
+        //sAgencyManager= Operations.initRemoteReferences(sAgencyManager);
         
         Operations.signinAsAdmin(Operations.getAgencyRemote());
 
@@ -56,19 +54,27 @@ public class GraphCoverageSuiteCase2 {
         airlineDTO = Operations.createAirline(Operations.getAgencyRemote());
         planeDTO = Operations.createPlane(Operations.getAgencyRemote());
         
-        tripDTO = Operations.createTrip(Operations.getAgencyRemote(), airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 100);
+        tripDTO = Operations.createTrip(Operations.getAgencyRemote(), airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 1000);
         
+        System.out.println("userDTO: " + userDTO);
         //create an user
         userDTO = Operations.createTestUser(Operations.getAgencyRemote());
+        
+        System.out.println("userDTO: " + userDTO);
         //get the user
         userDTO=Operations.getUser(Operations.getAgencyRemote(), userDTO);
+        
+        System.out.println("userDTO: " + userDTO);
         
         //accept the user
         Operations.signinAsAdmin(Operations.getAgencyRemote());
         Operations.getAgencyRemote().acceptUser(userDTO);
         
+        System.out.println("userDTO: " + userDTO);
+         
         //signin again as the accepted user
         Operations.signinAsTestUser(Operations.getAgencyRemote(), userDTO);
+        
     }
     
     @AfterClass
@@ -103,7 +109,7 @@ public class GraphCoverageSuiteCase2 {
         
         //since the plane has limitation 10 we buy 9 seats and finish the purchase... 
         purchaseDTO = Operations.buySeatsToTrip(Operations.getAgencyRemote(), tripDTO, 1);
-
+        
         TPurchaseDTO actualPurchaseTmp = Operations.getAgencyRemote().getActualPurchase();
         
         boolean result = purchaseDTO.getId().equals(actualPurchaseTmp.getId());
@@ -156,23 +162,6 @@ public class GraphCoverageSuiteCase2 {
         assertTrue(result);
         
     }
-    /*
-    @Test
-    public void T7() throws NoPermissionException {
-    
-        clearAllTmpData();
-        
-        Operations.signinAsTestUser(sAgencyManager);
-        sAgencyManager.depositToAccount(1000);
-        
-        purchaseDTO = Operations.buySeatsToTrip(sAgencyManager, tripDTO, 9);
-        
-        //the DTO is not updated but the db it is
-        sAgencyManager.removeActualPurchase(purchaseDTO);
-        
-        assertTrue(sAgencyManager.getActualPurchase() == null);
-    }
-    */
     
     @Test
     public void T8() throws NoPermissionException{
@@ -244,7 +233,6 @@ public class GraphCoverageSuiteCase2 {
         
         Operations.signinAsAdmin(Operations.getAgencyRemote());
         Operations.getAgencyRemote().deleteAllDataByFind();
-        
         tripDTO = null;
     }
 }

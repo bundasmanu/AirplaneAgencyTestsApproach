@@ -56,6 +56,7 @@ public class DecisionTableSuiteCase1 {
     @BeforeClass
     public static void setUpClass() throws NoPermissionException {
         
+        System.out.println("\n\n\n\n\n\n\n\n\nAQUI");
         logicOfTests();
         
     }
@@ -63,7 +64,6 @@ public class DecisionTableSuiteCase1 {
     @AfterClass
     public static void tearDownClass() throws NoPermissionException {
         
-        /*LIMPEZA DE TODOS OS DADOS QUE FORAM CRIADOS AO LONGO DOS TESTES REALIZADOS*/
         Operations.signinAsAdmin(Operations.getAgencyRemote());
         Operations.getAgencyRemote().deleteAllDataByFind();
    
@@ -163,10 +163,10 @@ public class DecisionTableSuiteCase1 {
             
             if (newPurchase != null && res == FeedbackResult.CompraComSucesso) {
                 this.limpaDados(tpurchase, newPurchase);
-                assertTrue("Compra Sucesso", true);
+                assertTrue("", true);
             } else if (newPurchase == null && res == FeedbackResult.CompraImpossivel) {
                 this.limpaDados(tpurchase, newPurchase);
-                assertTrue("Compra Insucesso", true);
+                assertTrue("", true);
             } else {
                 this.limpaDados(tpurchase, newPurchase);
                 assertFalse("", true);
@@ -193,34 +193,30 @@ public class DecisionTableSuiteCase1 {
     
     public static void logicOfTests() throws NoPermissionException{
         
-        /*DESCRICAO DE TODO O CONTEUDO INICIAL, QUE PERMITE VERIFICAR SE UM DETERMINADO TIPO DE UTILIZADOR PODE EFETUAR UMA COMPRA NO SISTEMA*/
-        
-        /*OBTENCAO DA REFERENCIA PARA O OBJETO REMOTO*/
-        //Operations.sAgencyManager=Operations.initRemoteReferences(Operations.sAgencyManager);
-        
-        /*Login do admin*/
+        //sAgencyManager= Operations.initRemoteReferences(sAgencyManager);
+
         Operations.signinAsAdmin(Operations.getAgencyRemote());
+
+        fromPlace = Operations.createFromPlace(Operations.getAgencyRemote());
+        toPlace = Operations.createToPlace(Operations.getAgencyRemote());
         
-        /*CRIACAO DE UMA PARTIDA E DE UM DESTINO--> VALORES POR DEFEITOS, INCLUIDOS NA DEFINICAO DO METODO*/
-        fromPlace=Operations.createFromPlace(Operations.getAgencyRemote());
-        toPlace=Operations.createToPlace(Operations.getAgencyRemote());
-        
-        /*CRIACAO DA COMPANHIA*/
-        airlineTrip=Operations.createAirline(Operations.getAgencyRemote());
-        
-        /*CRIACAO DO PLANE*/
-        planeTrip=Operations.createPlane(Operations.getAgencyRemote());/*LIMITE DO AVIAO SAO 10 LUGARES*/
-        
-        /*CRIACAO DA TRIP, TENDO EM CONTA O DESTINO, PARTIDA, COMPANHIA E O SEU AVIAO*/
-        trip=Operations.createTrip(Operations.getAgencyRemote(), airlineTrip, fromPlace, toPlace, planeTrip, 50, 100);/*PRECO DO BILHETE SAO 10, E A HORA DE PARTIDA É 100*/
-        
-        /*CRIACAO DE UM UTILIZADOR*/
+        airlineTrip = Operations.createAirline(Operations.getAgencyRemote());
+        planeTrip = Operations.createPlane(Operations.getAgencyRemote());
+                
+
+        trip = Operations.createTrip(Operations.getAgencyRemote(), airlineTrip, fromPlace, toPlace, planeTrip, 50.0, 2000);
+
+        //create an user
         userDTO = Operations.createTestUser(Operations.getAgencyRemote());
-        Operations.getAgencyRemote().acceptUser(userDTO);
-        
-        /*OBTENCAO DO DTO DO USER COMPLETO*/
+        //get the user
         userDTO=Operations.getUser(Operations.getAgencyRemote(), userDTO);
         
+        //accept the user
+        Operations.signinAsAdmin(Operations.getAgencyRemote());
+        Operations.getAgencyRemote().acceptUser(userDTO);
+        
+        //signin again as the accepted user
+        Operations.signinAsTestUser(Operations.getAgencyRemote(), userDTO);
     }
     
 }

@@ -64,7 +64,7 @@ public class BvaEctSuiteCase1{
         airlineDTO = Operations.createAirline(Operations.getAgencyRemote());
         planeDTO = Operations.createPlane(Operations.getAgencyRemote());
         
-        tripDTO = Operations.createTrip(Operations.getAgencyRemote(), airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 100);
+        tripDTO = Operations.createTrip(Operations.getAgencyRemote(), airlineDTO, fromPlace, toPlace, planeDTO, 50.0, 1000);
         
         
         //login from the normal user

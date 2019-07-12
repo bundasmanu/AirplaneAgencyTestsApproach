@@ -5,9 +5,10 @@
  */
 package SuiteClass;
 
+import Operations.FeedbackResult;
+import Operations.Operations;
 import java.util.Arrays;
 import java.util.Collection;
-import logic.AgencyManagerRemote;
 import logic.*;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,8 +18,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import Operations.*;
-import static Operations.Operations.sAgencyManager;
 
 /**
  *
@@ -48,7 +47,6 @@ public class BvaEctSuiteCase2 {
     public static void setUpClass() throws NoPermissionException {
         
         logicOfTests();
-        
     }
     
     @AfterClass
@@ -268,8 +266,8 @@ public class BvaEctSuiteCase2 {
         }
         
         /*APAGAR DA BD OS AUCTIONED SEATS*/
-        /*Operations.signinAsAdmin(sAgencyManager);
-        boolean ret=sAgencyManager.removeAuctionedSeatsUser(trip);*/
+        Operations.signinAsAdmin(Operations.getAgencyRemote());
+        boolean ret=Operations.getAgencyRemote().removeAuctionedSeatsUser(trip);
     }
     
     public static void logicOfTests() throws NoPermissionException{
@@ -290,7 +288,7 @@ public class BvaEctSuiteCase2 {
         planeTrip=Operations.createPlane(Operations.getAgencyRemote());
         
         /*CRIACAO DA TRIP*/
-        trip=Operations.createTrip(Operations.getAgencyRemote(), airlineTrip, fromPlace, toPlace, planeTrip, 50, 100);
+        trip=Operations.createTrip(Operations.getAgencyRemote(), airlineTrip, fromPlace, toPlace, planeTrip, 50, 1000);
         
         /*CRIACAO DO UTILIZADOR*/
         userDTO = Operations.createTestUser(Operations.getAgencyRemote());
